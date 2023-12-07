@@ -14,6 +14,7 @@ palemoon: /usr/local/bin/palemoon /usr/share/applications/palemoon.desktop palem
 	update-desktop-database
 
 palemoon-icons: /usr/share/icons/hicolor/16x16/apps/palemoon.png /usr/share/icons/hicolor/32x32/apps/palemoon.png /usr/share/icons/hicolor/48x48/apps/palemoon.png
+    gtk-update-icon-cache
 .PHONY: palemoon-icons
 
 /usr/share/icons/hicolor/16x16/apps/palemoon.png: /opt/palemoon/browser/chrome/icons/default/default16.png
