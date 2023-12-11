@@ -1,0 +1,22 @@
+key "Alt+Ctrl+Escape" xkill
+key "Print" icewm-screenshot
+key "Ctrl+Print" icewm-screenshot --region
+key "Shift+Ctrl+Print" icewm-screenshot --region --repeat
+
+key "Super+r" xfce4-appfinder
+key "Super+l" slimlock
+key "Super+e" thunar
+
+key "Super+c" xfce4-popup-clipman
+key "Alt+Ctrl+c" xfce4-popup-clipman
+#key "Shift+Insert" icewm-clipboard-paste
+
+key "XF86AudioMute" sh -c "exec ~/.icewm/helper/toggle-mute Master"
+key "XF86AudioLowerVolume" amixer sset Master 5%-
+key "XF86AudioRaiseVolume" amixer sset Master 5%+
+key "Super+v" pavucontrol
+
+switchkey "Super+k" sh -c "exec ~/.icewm/helper/kbd-layouts"
+switchkey "Super+Cyrillic_el" sh -c "exec ~/.icewm/helper/kbd-layouts"
+switchkey "Super+Greek_kappa" sh -c "exec ~/.icewm/helper/kbd-layouts"
+

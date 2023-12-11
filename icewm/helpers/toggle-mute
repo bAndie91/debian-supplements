@@ -1,0 +1,12 @@
+#!/bin/bash
+
+channel=$1
+level=`amixer sget "$channel" | grep -m1 -o -E '[0-9]+%'`
+if [ "$level" = 0% ]
+then
+	restore_level=`cat ~/.cache/amixer-last-level-"$channel"`
+	amixer sset "$channel" "$restore_level"
+else
+	echo "$level" > ~/.cache/amixer-last-level-"$channel"
+	amixer sset "$channel" 0%
+fi
