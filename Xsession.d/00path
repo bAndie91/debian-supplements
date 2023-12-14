@@ -1,0 +1,6 @@
+sys_path=`/usr/sbin/pam_getenv PATH`
+if [ -n "$sys_path" ]
+then
+	PATH=$sys_path
+	export PATH
+fi
