@@ -1,12 +1,16 @@
 #!/bin/bash
 
 channel=$1
-level=`amixer sget "$channel" | grep -m1 -o -E '[0-9]+%'`
-if [ "$level" = 0% ]
+
+mixer=`amixer sget "$channel"`
+level=`echo "$mixer" | grep -m1 -o -E '[0-9]+%'`
+muted=`echo "$mixer" | grep -q -F '[off]' && echo y || echo n`
+
+if [ "$level" = 0% -o "$muted" = y ]
 then
 	restore_level=`cat ~/.cache/amixer-last-level-"$channel"`
-	amixer sset "$channel" "$restore_level"
+	amixer sset "$channel" "$restore_level" on
 else
 	echo "$level" > ~/.cache/amixer-last-level-"$channel"
-	amixer sset "$channel" 0%
+	amixer sset "$channel" off
 fi

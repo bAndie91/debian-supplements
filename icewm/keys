@@ -1,7 +1,7 @@
 key "Alt+Ctrl+Escape" xkill
-key "Print" icewm-screenshot
-key "Ctrl+Print" icewm-screenshot --region
-key "Shift+Ctrl+Print" icewm-screenshot --region --repeat
+key "Print" xscreenshot
+key "Ctrl+Print" xscreenshot --region
+key "Shift+Ctrl+Print" xscreenshot --region --repeat
 
 key "Super+r" xfce4-appfinder
 key "Super+l" slimlock
@@ -20,3 +20,6 @@ switchkey "Super+k" sh -c "exec ~/.icewm/helper/kbd-layouts"
 switchkey "Super+Cyrillic_el" sh -c "exec ~/.icewm/helper/kbd-layouts"
 switchkey "Super+Greek_kappa" sh -c "exec ~/.icewm/helper/kbd-layouts"
 
+key "Super+F9" playerctl previous
+key "Super+F10" playerctl play-pause
+key "Super+F11" playerctl next
