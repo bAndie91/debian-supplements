@@ -4,10 +4,14 @@ setxkbmap us intl
 
 xrdb -override ~/.Xresources 
 
-xfce4-clipman &
-sudo nm-applet &
-blueman-applet &
-pasystray &
+# systray progs
+{
+	sleep 1
+	xfce4-clipman &
+	sudo nm-applet &
+	blueman-applet &
+	pasystray &
+}
 
 synclient VertTwoFingerScroll=1
 synclient HorizTwoFingerScroll=1

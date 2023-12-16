@@ -1,0 +1,8 @@
+#video/brightnessdown BRTDN 00000087 00000000
+#video/brightnessup BRTUP 00000086 00000000
+#video/switchmode VMOD 00000080 00000000 K
+#button/wlan WLAN 00000080 00000000 K
+
+#bluetooth: ibm/hotkey LEN0268:00 00000080 00001314
+#keyboard: ibm/hotkey LEN0268:00 00000080 00001311
+#favorits: ibm/hotkey LEN0268:00 00000080 00001315
