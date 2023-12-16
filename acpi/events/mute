@@ -1,3 +1,2 @@
-# MUTE event managed by windowManager/soundSystem/audioPlayer
-#event=button[ /]mute
-#action=/etc/acpi/mute.sh
+event=button[ /]mute
+action=/etc/acpi/mute.sh

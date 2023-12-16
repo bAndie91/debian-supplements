@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec amixer sset Master toggle
+exec amixer sset Master off
