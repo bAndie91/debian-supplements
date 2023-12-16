@@ -7,4 +7,5 @@ case $direction in
 (down)	sign='-';;
 esac
 
+amixer sset Master on
 exec amixer sset Master 5%$sign
