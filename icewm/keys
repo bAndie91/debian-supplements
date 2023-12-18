@@ -4,17 +4,20 @@ key "Ctrl+Print" xscreenshot --region
 key "Shift+Ctrl+Print" xscreenshot --region --repeat
 
 key "Super+r" xfce4-appfinder
-key "Super+l" xtrlock -b -f
+#key "Super+l" xtrlock -b -f
+key "Super+l" slimlock
 key "Super+e" thunar
+key "Super+p" xfce4-taskmanager
 
 key "Super+c" xfce4-popup-clipman
 key "Alt+Ctrl+c" xfce4-popup-clipman
 #key "Shift+Insert" icewm-clipboard-paste
 key "Alt+Ctrl+e" /usr/libexec/ibus-ui-emojier
 
-key "XF86AudioMute" sh -c "exec ~/.icewm/helper/toggle-mute Master"
-key "XF86AudioLowerVolume" amixer sset Master 5%-
-key "XF86AudioRaiseVolume" amixer sset Master 5%+
+# volume is managed by acpid
+#key "XF86AudioMute" sh -c "exec ~/.icewm/helper/toggle-mute Master"
+#key "XF86AudioLowerVolume" amixer sset Master 5%-
+#key "XF86AudioRaiseVolume" amixer sset Master 5%+
 #key "XF86AudioMicMute" amixer sset Capture toggle
 key "Super+v" pavucontrol
 

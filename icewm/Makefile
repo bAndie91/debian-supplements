@@ -1,8 +1,8 @@
 
-import: keys startup helper/
+import: keys startup preferences helper/
 .PHONY: import
 
-keys startup: %: $(HOME)/.icewm/%
+keys startup preferences: %: $(HOME)/.icewm/%
 	cp -f $< $@
 
 helper/: $(HOME)/.icewm/helper/
