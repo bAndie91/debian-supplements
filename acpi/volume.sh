@@ -7,5 +7,10 @@ case $direction in
 (down)	sign='-';;
 esac
 
-amixer sset Master on
+if [ $direction = up ]
+then
+	amixer sset Master on
+	amixer sset Speaker on   # thanks xflow7 for the tip
+fi
+
 exec amixer sset Master 5%$sign
