@@ -54,3 +54,14 @@ passwd_feedback_x       50%
 passwd_feedback_y       80%
 passwd_feedback_msg     Access Denied.
 passwd_feedback_capslock Access Denied. CapsLock is ON.
+
+session_prev_msg	Session.
+session_msg			Session:
+session_next_msg	Session.
+session_font	Verdana:size=16:bold
+session_prev_color	darkgrey
+session_color	white
+session_next_color	darkgrey
+#session_x	50%
+session_x	64
+session_y	90%
