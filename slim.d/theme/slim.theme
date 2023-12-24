@@ -38,6 +38,8 @@ username_shadow_yoffset 1
 username_msg            Username:
 password_msg            Password:
 
+show_username 1
+
 # Welcome message
 welcome_font           Verdana:size=28:bold:dpi=75
 welcome_color          #F4D5C0
