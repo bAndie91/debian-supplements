@@ -1,6 +1,6 @@
 [Desktop Entry]
 Version=1.0
 Name=User's X init
-Exec=/bin/sh -c 'exec sh ~/.xinitrc'
+Exec=/usr/bin/X11/xinitrc-session
 Icon=
 Type=Application
