@@ -1,22 +1,9 @@
 
-# if there was not requested a session explicitly in the login manager,
-# and the user has this setting file,
-# then take the default xsession from it.
-# on the other hand, if the user selected an xsession explicitly,
-# then save it as last used.
-
-XSESSION_LASTUSED_FILE=~/.config/xsession-last
-
 if [ -z "$1" ]
 then
-	if [ -s "$XSESSION_LASTUSED_FILE" ]
+	default_xsession=`cat ~/.config/xsession-default`
+	if [ -n "$default_xsession" ]
 	then
-		set -- "$(cat "$XSESSION_LASTUSED_FILE")"
-	fi
-else
-	if command -v "$1" >/dev/null
-	then
-		echo "$1" > "$XSESSION_LASTUSED_FILE"
+		set -- "$default_xsession"
 	fi
 fi
-
