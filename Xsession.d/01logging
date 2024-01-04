@@ -1,3 +1,4 @@
-mkfifo -m 0600 ~/xsession-log.fifo
-xconsole -file ~/xsession-log.fifo -geometry 500x200 &
-exec >> ~/xsession-log.fifo 2>&1
+ERRFIFO=~/xsession-log.fifo
+mkfifo -m 0600 $ERRFIFO
+xconsole -file $ERRFIFO -geometry 500x200 < /dev/null > $ERRFIFO 2>&1 &
+exec >> $ERRFIFO 2>&1
