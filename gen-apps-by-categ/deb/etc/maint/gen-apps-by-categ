@@ -4,22 +4,32 @@ for my $desktopfile (glob "/usr/share/applications/*.desktop")
 {
 	my ($basename) = $desktopfile =~ /([^\/]+)$/;
 	open my $fh, '<', $desktopfile or die $!;
+	my @categories = ();
+	my ($appname) = $basename =~ /^(.+?)\.desktop$/;
+	
 	while(<$fh>)
 	{
 		chomp;
 		if(/^Categories=(.+)$/)
 		{
-			my @cats = split /;/, $1;
-			for my $cat (@cats)
-			{
-				my $targetfile = "/opt/applications/$cat/$basename";
-				if(!-s $targetfile)
-				{
-					mkdir "/opt/applications/$cat";
-					system "cp", "-f", $desktopfile, $targetfile;
-				}
-				chmod 0755, $targetfile;
-			}
+			@categories = split /;/, $1;
 		}
+		elsif(/^Name=(.+)$/)
+		{
+			$appname = $1;
+		}
+	}
+	
+	close $fh;
+	
+	for my $cat (@categories)
+	{
+		my $targetfile = "/opt/applications/$cat/$appname.desktop";
+		if(!-s $targetfile)
+		{
+			mkdir "/opt/applications/$cat";
+			system "cp", "-f", $desktopfile, $targetfile;
+		}
+		chmod 0755, $targetfile;
 	}
 }

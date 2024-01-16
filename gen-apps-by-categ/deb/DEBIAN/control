@@ -1,5 +1,5 @@
 Package: gen-apps-by-categ
-Version: 0.0.1
+Version: 0.0.2
 Architecture: all
 Maintainer: Andreas Hrubak <andreas@uucp.hu>
 Depends: perl
