@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+for my $desktopfile (glob "/usr/share/applications/*.desktop")
+{
+	my ($basename) = $desktopfile =~ /([^\/]+)$/;
+	open my $fh, '<', $desktopfile or die $!;
+	while(<$fh>)
+	{
+		chomp;
+		if(/^Categories=(.+)$/)
+		{
+			my @cats = split /;/, $1;
+			for my $cat (@cats)
+			{
+				my $targetfile = "/opt/applications/$cat/$basename";
+				if(!-s $targetfile)
+				{
+					mkdir "/opt/applications/$cat";
+					system "cp", "-f", $desktopfile, $targetfile;
+				}
+				chmod 0755, $targetfile;
+			}
+		}
+	}
+}

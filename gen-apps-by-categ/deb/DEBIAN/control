@@ -1,0 +1,7 @@
+Package: gen-apps-by-categ
+Version: 0.0.1
+Architecture: all
+Maintainer: Andreas Hrubak <andreas@uucp.hu>
+Depends: perl
+Priority: optional
+Description: put XDG applications' desktop files in /opt/applications in per-category directories 
