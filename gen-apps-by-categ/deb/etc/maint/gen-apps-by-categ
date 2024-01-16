@@ -24,7 +24,8 @@ for my $desktopfile (glob "/usr/share/applications/*.desktop")
 	
 	for my $cat (@categories)
 	{
-		my $targetfile = "/opt/applications/$cat/$appname.desktop";
+		my $appname_safe = $appname; $appname_safe =~ s{/}{⁄}g;
+		my $targetfile = "/opt/applications/$cat/$appname_safe.desktop";
 		if(!-s $targetfile)
 		{
 			mkdir "/opt/applications/$cat";
