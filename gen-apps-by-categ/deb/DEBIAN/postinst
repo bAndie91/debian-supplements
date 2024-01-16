@@ -2,4 +2,7 @@
 if [ "$1" = triggered ]
 then
 	/etc/maint/gen-apps-by-categ
+	exit 0
 fi
+
+mkdir -p /opt/applications
