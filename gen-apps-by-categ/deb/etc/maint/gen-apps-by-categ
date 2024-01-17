@@ -1,36 +1,44 @@
 #!/usr/bin/env perl
 
-for my $desktopfile (glob "/usr/share/applications/*.desktop")
+# search common XDG_DATA_DIRS for application description files.
+# this list is in reverse-precedence order.
+@appdirs = (
+	"/var/lib/flatpak/exports/share/applications",
+	"/usr/share/gnome/applications",
+	"/usr/local/share/applications",
+	"/usr/share/applications",
+);
+
+for my $appdir (@appdirs)
 {
-	my ($basename) = $desktopfile =~ /([^\/]+)$/;
-	open my $fh, '<', $desktopfile or die $!;
-	my @categories = ();
-	my ($appname) = $basename =~ /^(.+?)\.desktop$/;
-	
-	while(<$fh>)
+	for my $desktopfile (glob "$appdir/*.desktop")
 	{
-		chomp;
-		if(/^Categories=(.+)$/)
+		my ($basename) = $desktopfile =~ /([^\/]+)$/;
+		my @categories = ();
+		my ($appname) = $basename =~ /^(.+?)\.desktop$/;
+		
+		open my $fh, '<', $desktopfile or die $!;
+		while(<$fh>)
 		{
-			@categories = split /;/, $1;
+			chomp;
+			if(/^Categories=(.+)$/)
+			{
+				@categories = split /;/, $1;
+			}
+			elsif(/^Name=(.+)$/)
+			{
+				$appname = $1;
+			}
 		}
-		elsif(/^Name=(.+)$/)
+		close $fh;
+		
+		for my $cat (@categories)
 		{
-			$appname = $1;
-		}
-	}
-	
-	close $fh;
-	
-	for my $cat (@categories)
-	{
-		my $appname_safe = $appname; $appname_safe =~ s{/}{⁄}g;
-		my $targetfile = "/opt/applications/$cat/$appname_safe.desktop";
-		if(!-s $targetfile)
-		{
+			# replace path separator to a look-alike unicode char
+			my $appname_safe = $appname; $appname_safe =~ s{/}{⁄}g;
+			my $targetfile = "/opt/applications/$cat/$appname_safe.desktop";
 			mkdir "/opt/applications/$cat";
-			system "cp", "-f", $desktopfile, $targetfile;
+			system 'install', '--compare', '-m', '0755', $desktopfile, $targetfile;
 		}
-		chmod 0755, $targetfile;
 	}
 }
