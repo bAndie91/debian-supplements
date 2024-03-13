@@ -1,0 +1,19 @@
+# set the "Keyboard" extra key to some keycode below 255,
+# so X11 able to handle it.
+# it's 347 by default (KEY_KEYBOARD)
+
+# acquire evdev input ID by "cat /sys/class/input/eventNN/device/modalias".
+
+# there is the scancode in KEY_KEYBOARD_xx in hex.
+# acquire it by evtest.
+
+# see keycode names in /usr/include/linux/input-event-codes.h
+# strip the "KEY_" prefix and lowercase the rest.
+
+# once composed this file, put in /etc/udev/hwdb.d/something.hwdb
+# run "udevadm hwdb -u" and "udevadm trigger".
+# verify results by "udevadm info /dev/input/eventNN".
+
+evdev:input:b0011v0001p0001eAB54*
+evdev:input:b0019v17AAp5054e4101*
+ KEYBOARD_KEY_49=chat
