@@ -1,0 +1,60 @@
+#!/usr/bin/env perl
+
+use Fcntl qw/:flock :seek/;
+
+$variable_definition_regex = qr/^(?:export )?([^=]+)=(.*)$/;
+
+$target_file = $ARGV[0];
+
+open $target_fh, '+<', $target_file or die "$0: open $target_file: $!\n";
+flock $target_fh, LOCK_EX or die "$0: lock $target_file: $!\n";
+
+while($variable_definition = <STDIN>)
+{
+	chomp $variable_definition;
+	next if /^#/;
+	next if /^\s*$/;
+	if(my ($varname, $qvalue) = $variable_definition =~ /$variable_definition_regex/)
+	{
+		$value = $qvalue =~ s/^"(.*?)"$/$1/r;
+		$variable_set = 0;
+		seek $target_fh, 0, SEEK_SET;
+		$pos = tell $target_fh;
+		while($target_line = <$target_fh>)
+		{
+			chomp $target_line;
+			next if $target_line =~ /^#/;
+			if(my ($old_varname, $old_qvalue) = $target_line =~ /$variable_definition_regex/)
+			{
+				if($old_varname eq $varname)
+				{
+					$old_value = $old_qvalue =~ s/^"(.*?)"$/$1/r;
+					if($old_value ne $value)
+					{
+						{
+							local $/ = undef;
+							$buffer_rest_of_file = <$target_fh>;
+						}
+						seek $target_fh, $pos, SEEK_SET;
+						print {$target_fh} "#$target_line\n";
+						print {$target_fh} "$variable_definition\n";
+						print {$target_fh} $buffer_rest_of_file;
+						warn "$0: patched $varname\n";
+					}
+					$variable_set = 1;
+					last;
+				}
+			}
+			$pos = tell $target_fh;
+		}
+		if(not $variable_set)
+		{
+			print {$target_fh} "$varname=$qvalue\n";
+			warn "$0: added $varname\n";
+		}
+	}
+	else
+	{
+		warn "$0: invalid input line $.: $_\n";
+	}
+}
