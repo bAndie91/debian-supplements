@@ -12,8 +12,8 @@ flock $target_fh, LOCK_EX or die "$0: lock $target_file: $!\n";
 while($variable_definition = <STDIN>)
 {
 	chomp $variable_definition;
-	next if /^#/;
-	next if /^\s*$/;
+	next if $variable_definition =~ /^#/;
+	next if $variable_definition =~ /^\s*$/;
 	if(my ($varname, $qvalue) = $variable_definition =~ /$variable_definition_regex/)
 	{
 		$value = $qvalue =~ s/^"(.*?)"$/$1/r;
@@ -49,7 +49,7 @@ while($variable_definition = <STDIN>)
 		}
 		if(not $variable_set)
 		{
-			print {$target_fh} "$varname=$qvalue\n";
+			print {$target_fh} "$variable_definition\n";
 			warn "$0: added $varname\n";
 		}
 	}
