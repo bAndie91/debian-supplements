@@ -7,21 +7,21 @@ default:
 	@echo "useful targets: install"
 	false
 
-install: /etc/environment /etc/sudoers.d/safe-environment.conf
+install: /etc/environment /etc/sudoers.d/safe-environment
 
 clean:
-	$(call remove,safe-environment.conf)
+	$(call remove,safe-environment)
 	$(call remove,envvarnames)
 
 
 /etc/environment: sysdefaults.env
 	./patch $@ < $<
 
-/etc/sudoers.d/safe-environment.conf: safe-environment.conf
+/etc/sudoers.d/safe-environment: safe-environment
 	cp $< $@
 	chmod 0440 $@
 
-safe-environment.conf: envvarnames
+safe-environment: envvarnames
 	echo "Defaults:%sudo env_keep += \"$$(cat $<)\"" > $@~
 	mv $@~ $@
 
