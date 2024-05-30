@@ -18,6 +18,7 @@ clean:
 	./patch $@ < $<
 
 /etc/sudoers.d/safe-environment.conf: safe-environment.conf
+	cp $< $@
 	chmod 0440 $@
 
 safe-environment.conf: envvarnames
