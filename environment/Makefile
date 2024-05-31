@@ -7,7 +7,7 @@ default:
 	@echo "useful targets: install"
 	false
 
-install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc
+install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc /etc/default/grub
 
 clean:
 	$(call remove,safe-environment)
@@ -31,3 +31,6 @@ envvarnames: sysdefaults.env
 
 /etc/screenrc: screenrc
 	CONFPATCH_TYPE="simple-space" ./confpatch $@ < $<
+
+/etc/default/grub: default-grub
+	CONFPATCH_TYPE="environment" ./confpatch $@ < $<
