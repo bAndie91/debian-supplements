@@ -2,7 +2,19 @@
 
 use Fcntl qw/:flock :seek/;
 
-$variable_definition_regex = qr/^(?:export )?([^=]+)=(.*)$/;
+$input_type = $ENV{'CONFPATCH_TYPE'};
+if($input_type eq 'environment')
+{
+	$variable_definition_regex = qr/^(?:export )?([^=]+)=(.*)$/;
+}
+elsif($input_type eq 'simple-space')
+{
+	$variable_definition_regex = qr/^(\S+)\s*(.*)$/;
+}
+else
+{
+	die "$0: unknown input type given in CONFPATCH_TYPE: $input_type\n";
+}
 
 $target_file = $ARGV[0];
 
@@ -19,8 +31,7 @@ while($variable_definition = <STDIN>)
 		$value = $qvalue =~ s/^"(.*?)"$/$1/r;
 		$variable_set = 0;
 		seek $target_fh, 0, SEEK_SET;
-		$pos = tell $target_fh;
-		while($target_line = <$target_fh>)
+		while(do{ $pos = tell $target_fh; $target_line = <$target_fh>; })
 		{
 			chomp $target_line;
 			next if $target_line =~ /^#/;
@@ -45,7 +56,6 @@ while($variable_definition = <STDIN>)
 					last;
 				}
 			}
-			$pos = tell $target_fh;
 		}
 		if(not $variable_set)
 		{

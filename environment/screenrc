@@ -1,0 +1,10 @@
+deflog off
+deflogin off
+defscrollback 50000
+defflow auto
+defutf8 on
+encoding utf8
+utf8 on on
+startup_message off
+altscreen on
+vbell off

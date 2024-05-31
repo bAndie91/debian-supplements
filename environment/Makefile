@@ -7,7 +7,7 @@ default:
 	@echo "useful targets: install"
 	false
 
-install: /etc/environment /etc/sudoers.d/safe-environment
+install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc
 
 clean:
 	$(call remove,safe-environment)
@@ -15,7 +15,7 @@ clean:
 
 
 /etc/environment: sysdefaults.env
-	./patch $@ < $<
+	CONFPATCH_TYPE="environment" ./confpatch $@ < $<
 
 /etc/sudoers.d/safe-environment: safe-environment
 	cp $< $@
@@ -28,3 +28,6 @@ safe-environment: envvarnames
 envvarnames: sysdefaults.env
 	cat $< | perl -ne 'next if /^#/; s/^\s*$$//; /^([^=]+)/ and print "$$1 "' > $@~
 	mv $@~ $@
+
+/etc/screenrc: screenrc
+	CONFPATCH_TYPE="simple-space" ./confpatch $@ < $<
