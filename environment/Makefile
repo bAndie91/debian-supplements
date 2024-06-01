@@ -7,7 +7,7 @@ default:
 	@echo "useful targets: install"
 	false
 
-install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc /etc/default/grub
+install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc /etc/default/grub /etc/profile.d/bash_aliases.sh
 
 clean:
 	$(call remove,safe-environment)
@@ -34,3 +34,6 @@ envvarnames: sysdefaults.env
 
 /etc/default/grub: default-grub
 	CONFPATCH_TYPE="environment" ./confpatch $@ < $<
+
+/etc/profile.d/bash_aliases.sh: bash_aliases.sh
+	install $< $@
