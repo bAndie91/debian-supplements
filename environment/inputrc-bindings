@@ -1,0 +1,5 @@
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+"\e[1;2A": previous-history
+"\e[1;2B": next-history
+"\C-b": unix-filename-rubout

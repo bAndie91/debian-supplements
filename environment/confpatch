@@ -11,6 +11,11 @@ elsif($input_type eq 'simple-space')
 {
 	$variable_definition_regex = qr/^(\S+)\s*(.*)$/;
 }
+elsif($input_type eq 'custom')
+{
+	#$variable_definition_regex = qr/^$lead_regex($key_regex)$separator_regex($value_regex)$trail_regex$/;
+	$variable_definition_regex = $ENV{'CONFPATCH_KV_PATTERN'} or die "$0: no CONFPATCH_KV_PATTERN given\n";
+}
 else
 {
 	die "$0: unknown input type given in CONFPATCH_TYPE: $input_type\n";

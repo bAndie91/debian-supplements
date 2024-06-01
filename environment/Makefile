@@ -3,7 +3,9 @@ default:
 	@echo "useful targets: install"
 	false
 
-install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc /etc/default/grub /etc/profile.d/bash_aliases.sh /etc/X11/Xsession.d/00path
+install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc \
+  /etc/default/grub /etc/profile.d/bash_aliases.sh /etc/X11/Xsession.d/00path \
+  /etc/inputrc
 
 clean:
 	-rm safe-environment
@@ -36,3 +38,7 @@ envvarnames: sysdefaults.env
 
 /etc/X11/Xsession.d/00path: Xsession.d/00path
 	cp $< $@
+
+/etc/inputrc: inputrc-bindings inputrc-options
+	CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^([^:]+):\s*(.+)$$' ./confpatch $@ < inputrc-bindings
+	CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^set\s+(\S+)\s+(.+)$$' ./confpatch $@ < inputrc-options

@@ -1,0 +1,4 @@
+set mark-symlinked-directories on
+set print-completions-horizontally off
+set colored-stats on
+set colored-completion-prefix on
