@@ -24,6 +24,7 @@ flock $target_fh, LOCK_EX or die "$0: lock $target_file: $!\n";
 while($variable_definition = <STDIN>)
 {
 	chomp $variable_definition;
+	# TODO: keep comment block belonging to a setting
 	next if $variable_definition =~ /^#/;
 	next if $variable_definition =~ /^\s*$/;
 	if(my ($varname, $qvalue) = $variable_definition =~ /$variable_definition_regex/)

@@ -1,17 +1,13 @@
 
-define remove
-@[ ! -e $(1) ] || rm -v $(1)
-endef
-
 default:
 	@echo "useful targets: install"
 	false
 
-install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc /etc/default/grub /etc/profile.d/bash_aliases.sh
+install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc /etc/default/grub /etc/profile.d/bash_aliases.sh /etc/X11/Xsession.d/00path
 
 clean:
-	$(call remove,safe-environment)
-	$(call remove,envvarnames)
+	-rm safe-environment
+	-rm envvarnames
 
 
 /etc/environment: sysdefaults.env
@@ -37,3 +33,6 @@ envvarnames: sysdefaults.env
 
 /etc/profile.d/bash_aliases.sh: bash_aliases.sh
 	install $< $@
+
+/etc/X11/Xsession.d/00path: Xsession.d/00path
+	cp $< $@
