@@ -6,5 +6,6 @@ defutf8 on
 encoding utf8
 utf8 on on
 startup_message off
+shell bash -l
 altscreen on
 vbell off
