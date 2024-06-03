@@ -5,7 +5,7 @@ default:
 
 install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc \
   /etc/default/grub /etc/profile.d/bash_aliases.sh /etc/X11/Xsession.d/00path \
-  /etc/inputrc /etc/profile
+  /etc/inputrc /etc/profile /bin/-bash
 
 clean:
 	-rm safe-environment
@@ -48,3 +48,6 @@ CHECK_PATCH_APPLIED_CMD = patch --unified --ignore-whitespace --reverse --dry-ru
 /etc/profile: profile.patch
 	$(CHECK_PATCH_APPLIED_CMD) $@ < $<  2>/dev/null 1>&2 || \
 	patch --unified --ignore-whitespace --forward --reject-file=- $@ < $<
+
+/bin/-bash:
+	[ -e $@ ] || ln -sn bash $@
