@@ -46,5 +46,5 @@ envvarnames: sysdefaults.env
 CHECK_PATCH_APPLIED_CMD = patch --unified --ignore-whitespace --reverse --dry-run --force
 
 /etc/profile: profile.patch
-	$(CHECK_PATCH_APPLIED_CMD) $@ < $< || \
+	$(CHECK_PATCH_APPLIED_CMD) $@ < $<  2>/dev/null 1>&2 || \
 	patch --unified --ignore-whitespace --forward --reject-file=- $@ < $<
