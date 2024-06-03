@@ -5,7 +5,7 @@ default:
 
 install: /etc/environment /etc/sudoers.d/safe-environment /etc/screenrc \
   /etc/default/grub /etc/profile.d/bash_aliases.sh /etc/X11/Xsession.d/00path \
-  /etc/inputrc
+  /etc/inputrc /etc/profile
 
 clean:
 	-rm safe-environment
@@ -42,3 +42,9 @@ envvarnames: sysdefaults.env
 /etc/inputrc: inputrc-bindings inputrc-options
 	CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^([^:]+):\s*(.+)$$' ./confpatch $@ < inputrc-bindings
 	CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^set\s+(\S+)\s+(.+)$$' ./confpatch $@ < inputrc-options
+
+CHECK_PATCH_APPLIED_CMD = patch --unified --ignore-whitespace --reverse --dry-run --force
+
+/etc/profile: profile.patch
+	$(CHECK_PATCH_APPLIED_CMD) $@ < $< || \
+	patch --unified --ignore-whitespace --forward --reject-file=- $@ < $<
