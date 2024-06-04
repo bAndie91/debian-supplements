@@ -1,0 +1,10 @@
+proc  /proc  proc  hidepid=1  0  0
+sysfs  /sys  sysfs  defaults  0  0
+cgroup  /sys/fs/cgroup  cgroup  defaults  0  0
+devtmpfs  /dev  devtmpfs  relatime,mode=755  0  0
+devpts  /dev/pts  devpts  nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000  0  0
+tmpfs  /tmp  tmpfs  rw,size=500M,atime  0  0
+
+#UUID=...  /  auto  noatime  0  1
+
+# useful for chroot installation: mount --all --fstab /target/etc/fstab --target-prefix /target
