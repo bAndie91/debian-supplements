@@ -12,4 +12,6 @@ then
 	then
 		alias ..='cd ..'
 	fi
+	
+	alias grep="grep $GREP_OPTS"
 fi
