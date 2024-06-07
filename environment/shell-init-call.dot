@@ -1,0 +1,64 @@
+digraph {
+	"bash --login" [shape="invhouse"];
+	"bash (interactive)" [shape="invhouse"];
+	"non-interactive" [label="non-interactive\nbash -c COMMANDS\nbash SCRIPT_PATH",shape="invhouse"];
+	
+	"/etc/bash.bashrc: if PS1" [label="$PS1",shape="diamond"];
+	"$PS1 and $BASH" [shape="diamond"];
+	"/usr/share/bash-completion/bash_completion ?" [shape="diamond"];
+	
+	"logout" [label="",shape="circle"];
+	"END" [shape="box"];
+
+	
+	"/etc/bash.bashrc" -> "/etc/bash.bashrc: if PS1";
+	"/etc/bash.bashrc: if PS1" -> "/usr/share/bash-completion/bash_completion ?" [style="dotted",label="#"];
+	
+	"/usr/share/bash-completion/bash_completion ?" -> "/usr/share/bash-completion/bash_completion" [label="exists"];
+	"/usr/share/bash-completion/bash_completion ?" -> "/etc/bash_completion" [label="not exist"];
+	"/etc/bash_completion" -> "/usr/share/bash-completion/bash_completion";
+	
+	"bash --login" -> "/etc/profile";
+	"/etc/profile" -> "$PS1 and $BASH" [label="1"];
+	"$PS1 and $BASH" -> "/etc/bash.bashrc";
+	"/etc/profile" -> "/etc/profile.d/*.sh" [label="2"];
+	
+	"bash-completion.sh" [label="bash-completion.sh (if interactive and\nnot BASH_COMPLETION_VERSINFO)"];
+	
+	"/etc/profile.d/*.sh" -> "bash-completion.sh";
+	"bash-completion.sh" -> "~/.config/bash-completion" [label="1"];
+	"bash-completion.sh" -> "/usr/share/bash-completion/bash_completion" [label="2"];
+	
+	"~/.bash_profile ?" [shape="diamond"];
+	"~/.bash_login ?" [shape="diamond"];
+	"~/.profile ?" [shape="diamond"];
+	"if login shell" [shape="diamond"];
+	
+	"bash --login" -> "~/.bash_profile ?";
+	"~/.bash_profile ?" -> "~/.bash_profile" [label="exists"];
+	"~/.bash_profile" -> "interactive session";
+	"~/.bash_profile ?" -> "~/.bash_login ?" [label="not exist"];
+	"~/.bash_login ?" -> "~/.bash_login" [label="exists"];
+	"~/.bash_login" -> "interactive session";
+	"~/.bash_login ?" -> "~/.profile ?" [label="not exists"];
+	"~/.profile ?" -> "~/.profile" [label="exists"];
+	"~/.profile" -> "~/.bashrc";
+	
+	"bash (interactive)" -> "/etc/bash.bashrc" [label="1"];
+	"bash (interactive)" -> "~/.bashrc" [label="2"];
+	
+	"~/.bashrc" -> "~/.bash_aliases" [label="1"];
+	"~/.bashrc" -> "/usr/share/bash-completion/bash_completion ?" [label="2"];
+	"/etc/bash.bashrc" -> "/etc/profile" [color="green",label="unless ETC_PROFILE=washere"];
+	
+	"~/.bashrc" -> "interactive session" [label=""];
+
+	"interactive session" -> "if login shell";
+	"if login shell" -> "logout" [label="yes"];
+	"logout" -> "~/.bash_logout" [label="1"];
+	"logout" -> "/etc/bash.bash_logout" [label="2"];
+	"if login shell" -> "END" [label="no"];
+	"/etc/bash.bash_logout" -> "END";
+	
+	"non-interactive" -> ". $BASH_ENV";
+}
