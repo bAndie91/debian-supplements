@@ -34,7 +34,7 @@ clean:
 	install $< $@
 /etc/profile.d/bash.d:
 	mkdir -p $@
-/etc/profile.d/bash.d/bash_aliases.sh: bash_aliases.sh
+/etc/profile.d/bash.d/aliases.sh: bash_aliases.sh
 	install $< $@
 
 /etc/X11/Xsession.d/00path: Xsession.d/00path
