@@ -6,3 +6,10 @@
  fi
 +fi
  export PATH
+@@ -9,4 +9,6 @@
+ export PATH
+ 
++ETC_PROFILE=washere
++
+ if [ "${PS1-}" ]; then
+   if [ "${BASH-}" ] && [ "$BASH" != "/bin/sh" ]; then
