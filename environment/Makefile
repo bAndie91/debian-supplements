@@ -50,7 +50,7 @@ CHECK_PATCH_APPLIED_CMD = patch --unified --ignore-whitespace --reverse --dry-ru
 	$(CHECK_PATCH_APPLIED_CMD) $@ < $<  2>/dev/null 1>&2 || \
 	patch --unified --ignore-whitespace --forward --reject-file=- $@ < $<
 
-/etc/profile: bashrc.patch
+/etc/bash.bashrc: bashrc.patch
 	$(CHECK_PATCH_APPLIED_CMD) $@ < $<  2>/dev/null 1>&2 || \
 	patch --unified --ignore-whitespace --forward --reject-file=- $@ < $<
 
