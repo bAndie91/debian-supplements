@@ -1,0 +1,12 @@
+--- s	2024-06-07 23:12:35.731905006 +0200
++++ s2	2024-06-07 23:41:43.887898338 +0200
+@@ -3,4 +3,9 @@
+ # for examples
+ 
++if [ "$ETC_PROFILE_LOADED" != 1 ]
++then
++  . /etc/profile
++fi
++
+ # If not running interactively, don't do anything
+ case $- in
