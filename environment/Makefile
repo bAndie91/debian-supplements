@@ -10,8 +10,7 @@ install: /etc/environment /etc/default/grub /etc/X11/Xsession.d/00path \
   /etc/profile.d/bash-only.sh /etc/profile.d/bash.d /etc/profile.d/bash.d/aliases.sh \
 
 clean:
-	-rm safe-environment
-	-rm envvarnames
+	-rm shell-init-call.jpg
 
 
 /etc/environment: sysdefaults.env
@@ -56,3 +55,7 @@ CHECK_PATCH_APPLIED_CMD = patch --unified --ignore-whitespace --reverse --dry-ru
 
 /bin/-bash:
 	[ -e $@ ] || ln -sn bash $@
+
+shell-init-call.jpg: shell-init-call.dot
+	dot -Tjpg < $< > $@~
+	mv $@~ $@
