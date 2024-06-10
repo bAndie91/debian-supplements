@@ -1,4 +1,6 @@
 
+SHELL = /usr/bin/env bash
+
 default:
 	@echo "useful targets: install"
 	false
@@ -59,3 +61,12 @@ CHECK_PATCH_APPLIED_CMD = patch --unified --ignore-whitespace --reverse --dry-ru
 shell-init-call.jpg: shell-init-call.dot
 	dot -Tjpg < $< > $@~
 	mv $@~ $@
+
+CPAN_MIRROR = http://www.uucp.hu/mirror/cpan/
+.PHONY: install-cpan-repo
+install-cpan-repo:
+	if ! cpan <<< "o conf urllist" | grep $(CPAN_MIRROR); then \
+		{ echo "o conf urllist unshift $(CPAN_MIRROR)"; \
+		  echo "o conf commit"; } | \
+		cpan; \
+	fi
