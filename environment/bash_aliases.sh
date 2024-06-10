@@ -1,3 +1,13 @@
+if ! alias ls 2>/dev/null >&2
+then
+	alias ls='ls --color'
+fi
+
+if [ -z "$LS_COLORS" ] && type dircolors >/dev/null 2>&1
+then
+	eval `dircolors`
+fi
+
 if ! alias ll 2>/dev/null >&2
 then
 	alias ll='ls -lA'
