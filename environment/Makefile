@@ -9,7 +9,7 @@ install: /etc/environment /etc/default/grub /etc/X11/Xsession.d/00path \
   /etc/sudoers /etc/sudoers.d/default-env-file /etc/inputrc \
   /etc/screenrc /bin/-bash \
   /etc/profile /etc/bash.bashrc \
-  /etc/profile.d/bash-only.sh /etc/profile.d/bash.d /etc/profile.d/bash.d/aliases.sh \
+  /etc/profile.d/bash-only.sh /etc/profile.d/bash.d /etc/profile.d/bash.d/aliases.sh /etc/profile.d/bash.d/history.sh \
 
 clean:
 	-rm shell-init-call.jpg
@@ -36,6 +36,8 @@ clean:
 /etc/profile.d/bash.d:
 	mkdir -p $@
 /etc/profile.d/bash.d/aliases.sh: bash_aliases.sh
+	install $< $@
+/etc/profile.d/bash.d/history.sh: bash_history.sh
 	install $< $@
 
 /etc/X11/Xsession.d/00path: Xsession.d/00path
