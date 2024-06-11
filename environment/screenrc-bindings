@@ -1,0 +1,2 @@
+bind < number -1
+bind > number +1

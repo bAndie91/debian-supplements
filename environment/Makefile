@@ -25,8 +25,9 @@ clean:
 /etc/sudoers: sudoers-default-secure-path
 	CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^([^\s=]+\s+[^\s=]+)=(.*)' ./confpatch $@ < $<
 
-/etc/screenrc: screenrc
-	CONFPATCH_TYPE="simple-space" ./confpatch $@ < $<
+/etc/screenrc: screenrc screenrc-bindings
+	CONFPATCH_TYPE="simple-space" ./confpatch $@ < screenrc
+	CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^bind\s+(\S+)\s+(.+)$$' ./confpatch $@ < screenrc-bindings
 
 /etc/default/grub: default-grub
 	CONFPATCH_TYPE="environment" ./confpatch $@ < $<
