@@ -1,6 +1,6 @@
 
 .PHONY: all
-all: /etc/resolv.conf.dnsmasq /etc/dnsmasq.conf
+all: /etc/resolv.conf /etc/resolv.conf.dnsmasq /etc/dnsmasq.conf
 
 /etc/resolv.conf.dnsmasq: resolv.conf.dnsmasq
 	install $< $@
@@ -10,3 +10,4 @@ all: /etc/resolv.conf.dnsmasq /etc/dnsmasq.conf
 	service dnsmasq restart
 
 /etc/resolv.conf: resolv.conf
+	install $< $@
