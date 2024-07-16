@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -n "$DHCP4_DOMAIN_NAME" ]
+then
+	{
+		echo "# domain option added by $0"
+		echo "domain $DHCP4_DOMAIN_NAME"
+	} >> /etc/resolv.conf
+fi

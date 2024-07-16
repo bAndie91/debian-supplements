@@ -1,6 +1,6 @@
 
 .PHONY: all
-all: /etc/resolv.conf.dnsmasq /etc/dnsmasq.conf /etc/NetworkManager/dispatcher.d/resolv-conf-domain
+all: /etc/resolv.conf.dnsmasq /etc/dnsmasq.conf
 
 /etc/resolv.conf.dnsmasq: resolv.conf.dnsmasq
 	install $< $@
@@ -9,5 +9,4 @@ all: /etc/resolv.conf.dnsmasq /etc/dnsmasq.conf /etc/NetworkManager/dispatcher.d
 	install $< $@
 	service dnsmasq restart
 
-/etc/NetworkManager/dispatcher.d/resolv-conf-domain: resolv-conf-domain
-	install $< $@
+/etc/resolv.conf: resolv.conf
