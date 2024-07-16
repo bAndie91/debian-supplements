@@ -5,17 +5,17 @@ network-manager-dnsmasq: /etc/NetworkManager/dnsmasq.d/cache
 	service network-manager restart
 
 /etc/NetworkManager/dnsmasq.d/cache: cache
-	install $< $@
+	cp $< $@
 
 .PHONY: custom-dnsmasq-cache
 all: /etc/resolv.conf /etc/resolv.conf.dnsmasq /etc/dnsmasq.conf
 
 /etc/resolv.conf.dnsmasq: resolv.conf.dnsmasq
-	install $< $@
+	cp $< $@
 
 /etc/dnsmasq.conf: dnsmasq.conf
-	install $< $@
+	cp $< $@
 	service dnsmasq restart
 
 /etc/resolv.conf: resolv.conf
-	install $< $@
+	cp $< $@
