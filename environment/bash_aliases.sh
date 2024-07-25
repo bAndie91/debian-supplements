@@ -22,3 +22,5 @@ then
 fi
 
 alias grep="grep $GREP_OPTS"
+
+alias rm="rm --one-file-system"
