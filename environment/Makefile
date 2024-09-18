@@ -73,3 +73,7 @@ install-cpan-repo:
 		  echo "o conf commit"; } | \
 		cpan; \
 	fi
+	{ echo "o conf pushy_https 0"; \
+	  echo "o conf randomize_urllist 0"; \
+	  echo "o conf commit"; } | \
+	cpan
