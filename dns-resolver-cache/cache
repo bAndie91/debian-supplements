@@ -1,1 +1,6 @@
 cache-size=10000
+#log-queries
+# return expired cache entries indefinitely
+use-stale-cache=0
+log-queries
+log-facility=DAEMON
