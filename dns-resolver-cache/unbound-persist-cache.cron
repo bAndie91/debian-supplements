@@ -1,0 +1,1 @@
+*/5 * * * * root unbound-control dump_cache > /var/cache/unbound.dump~ && mv /var/cache/unbound.dump~ /var/cache/unbound.dump
