@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# arguments example:
+# 256 /home/hband/mnt/pub/media/channels/Zállatorvos /tmp/tumbler-MCYFW2.png file:///home/hband/mnt/pub/media/channels/Z%C3%A1llatorvos
+
+#set -e
+#set -o pipefail
+set -u
+
+size=$1
+file_path=$2
+thumbnail_path=$3
+file_uri=$4
+
+for folder_thumbnail_file in "$file_path/cover.jpg"
+do
+	if [ -s "$folder_thumbnail_file" ]
+	then
+		convert -thumbnail "$size" "$folder_thumbnail_file" "$thumbnail_path"
+		if [ $? = 0 ]
+		then
+			break
+		fi
+		# thumbnail partially generated: empty it
+		if [ -s "$thumbnail_path" ]
+		then
+			true > "$thumbnail_path"
+		fi
+	fi
+done
+
+if [ ! -s "$thumbnail_path" ]
+then
+	# clear the old thumbnail from cache if we could not generate a new one
+	gdbus call --session --dest=org.freedesktop.thumbnails.Cache1 --object-path /org/freedesktop/thumbnails/Cache1 \
+		--method org.freedesktop.thumbnails.Cache1.Delete "['$file_uri']" >/dev/null
+fi
