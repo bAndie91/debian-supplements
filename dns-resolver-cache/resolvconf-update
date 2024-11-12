@@ -2,5 +2,4 @@
 if [ "$1" = resolvconf_start ]
 then
 	resolvconf -u
-	unbound-control load_cache < /var/cache/unbound.dump
 fi

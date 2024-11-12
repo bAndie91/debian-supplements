@@ -5,7 +5,7 @@ default:
 
 
 .PHONY: on-network-manager-based-system
-on-network-manager-based-system: ensure-resolvconf ensure-unbound /etc/default/unbound /etc/unbound/unbound.conf.d/cache.conf /etc/unbound/unbound.conf.d/upstream.conf /etc/cron.d/unbound-persist-cache
+on-network-manager-based-system: ensure-resolvconf ensure-unbound /etc/default/unbound /etc/default/unbound.d/resolvconf-update /etc/unbound/unbound.conf.d/upstream.conf
 	crudini --set /etc/NetworkManager/NetworkManager.conf main dns default
 	crudini --set /etc/NetworkManager/NetworkManager.conf main rc-manager resolvconf
 	service unbound restart
@@ -19,21 +19,21 @@ ensure-resolvconf:
 ensure-unbound:
 	unbound-control status
 
-/etc/default/unbound: unbound-start-hook
+/etc/default/unbound: unbound-service-hook
 	cp $< $@
 
-/etc/unbound/unbound.conf.d/cache.conf: cache.conf
+/etc/default/unbound.d/resolvconf-update: resolvconf-update
 	cp $< $@
 
 /etc/unbound/unbound.conf.d/upstream.conf: upstream.conf
 	cp $< $@
 
-/etc/cron.d/unbound-persist-cache: unbound-persist-cache.cron
-	cp $< $@
-
 
 .PHONY: custom-dnsmasq-cache
 custom-dnsmasq-cache: /etc/resolv.conf /etc/resolv.conf.dnsmasq /etc/dnsmasq.conf
+
+/etc/resolv.conf: resolv.conf
+	cp $< $@
 
 /etc/resolv.conf.dnsmasq: resolv.conf.dnsmasq
 	cp $< $@
@@ -41,6 +41,3 @@ custom-dnsmasq-cache: /etc/resolv.conf /etc/resolv.conf.dnsmasq /etc/dnsmasq.con
 /etc/dnsmasq.conf: dnsmasq.conf
 	cp $< $@
 	service dnsmasq restart
-
-/etc/resolv.conf: resolv.conf
-	cp $< $@
