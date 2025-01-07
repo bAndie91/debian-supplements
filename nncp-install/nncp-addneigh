@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+set -o pipefail
+set -u
+
+{
+	hjson-cli -j < /etc/nncp.hjson
+	echo "{
+		neigh:
+		{
+			$neigh_name:
+			{
+				id:
+				signpub:
+				exchpub:
+				noisepub:
+			}
+		}
+	}" | hjson-cli -j
+}|\
+jq -s '.[0] * .[1]' |\
+hjson-cli
