@@ -5,10 +5,12 @@ default:
 
 
 .PHONY: install-on-network-manager-based-system
-install-on-network-manager-based-system: ensure-resolvconf ensure-unbound config-unbound
+install-on-network-manager-based-system: config-network-manager ensure-resolvconf ensure-unbound config-unbound
+
+.PHONY: config-network-manager
+config-network-manager:
 	crudini --set /etc/NetworkManager/NetworkManager.conf main dns default
 	crudini --set /etc/NetworkManager/NetworkManager.conf main rc-manager resolvconf
-	service unbound restart
 	service network-manager restart
 
 .PHONY: ensure-resolvconf
@@ -21,6 +23,7 @@ ensure-unbound:
 
 .PHONY: config-unbound
 config-unbound: /etc/default/unbound.d/resolvconf-update /etc/unbound/unbound.conf.d/upstream.conf
+	service unbound restart
 
 /etc/default/unbound.d/resolvconf-update: resolvconf-update
 	cp $< $@
