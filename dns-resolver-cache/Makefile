@@ -4,8 +4,8 @@ default:
 	false
 
 
-.PHONY: on-network-manager-based-system
-on-network-manager-based-system: ensure-resolvconf ensure-unbound /etc/default/unbound /etc/default/unbound.d/resolvconf-update /etc/unbound/unbound.conf.d/upstream.conf
+.PHONY: install-on-network-manager-based-system
+install-on-network-manager-based-system: ensure-resolvconf ensure-unbound config-unbound
 	crudini --set /etc/NetworkManager/NetworkManager.conf main dns default
 	crudini --set /etc/NetworkManager/NetworkManager.conf main rc-manager resolvconf
 	service unbound restart
@@ -19,8 +19,8 @@ ensure-resolvconf:
 ensure-unbound:
 	unbound-control status
 
-/etc/default/unbound: unbound-service-hook
-	cp $< $@
+.PHONY: config-unbound
+config-unbound: /etc/default/unbound.d/resolvconf-update /etc/unbound/unbound.conf.d/upstream.conf
 
 /etc/default/unbound.d/resolvconf-update: resolvconf-update
 	cp $< $@
