@@ -22,13 +22,16 @@ ensure-unbound:
 	unbound-control status
 
 .PHONY: config-unbound
-config-unbound: /etc/default/unbound.d/resolvconf-update /etc/unbound/unbound.conf.d/upstream.conf
+config-unbound: /etc/default/unbound.d/resolvconf-update /etc/unbound/unbound.conf.d/upstream.conf /etc/unbound/unbound.conf.d/private-reverse-zones.conf
 	service unbound restart
 
 /etc/default/unbound.d/resolvconf-update: resolvconf-update
 	cp $< $@
 
 /etc/unbound/unbound.conf.d/upstream.conf: upstream.conf
+	cp $< $@
+
+/etc/unbound/unbound.conf.d/private-reverse-zones.conf: private-reverse-zones.conf
 	cp $< $@
 
 
