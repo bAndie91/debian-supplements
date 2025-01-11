@@ -13,6 +13,7 @@ install: /etc/nncp.hjson
 .PHONY: add-neighbours
 add-neighbours:
 	cat neighbours.mrkv | mrkv2td -s '\s+' | td-foreach
+	cat neighbours.mrkv | mrkv2td -s '\t+' | td2kvpairs | foreach --sh 'env {} ./nncp-addneigh < /etc/nncp.hjson | sponge /etc/nncp.hjson'
 
 # chown nncp
 # share pub keys
