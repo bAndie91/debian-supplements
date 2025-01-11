@@ -4,11 +4,15 @@ default:
 	echo "do you want 'make install'?"
 	@false
 
-.PHONY: install
+.PHONY: install add-neighbours
 install: /etc/nncp.hjson
 
 /etc/nncp.hjson:
 	nncp-cfgnew > $@
+
+.PHONY: add-neighbours
+add-neighbours:
+	cat neighbours.mrkv | mrkv2td -s '\s+' | td-foreach
 
 # chown nncp
 # share pub keys
