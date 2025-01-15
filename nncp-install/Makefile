@@ -32,5 +32,6 @@ add-neighbours: neighbours.json /etc/nncp.hjson
 # chown nncp
 # share pub keys
 # incoming folder
+# daemontab:
 # nncp                    setpriv --reuid nncp --init-groups setpgrp stdfilt -F /etc/daemons/nncp-daemon.filter -- nncp-daemon -autotoss -noprogress
 # nncp-caller             setpriv --reuid nncp --init-groups setpgrp nncp-caller -autotoss -noprogress
