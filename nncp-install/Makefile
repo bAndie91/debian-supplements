@@ -4,16 +4,30 @@ default:
 	echo "do you want 'make install'?"
 	@false
 
-.PHONY: install add-neighbours
-install: /etc/nncp.hjson
+.PHONY: install
+install: check-deps add-neighbours
+
+.PHONY: check-deps
+check-deps:
+	@type nncp-cfgnew
+	@type hjson-cli
+	@type mrkv2td
+	@type td-env
+	@type json-merge-objects
+	@type ifne
+	@type sponge
+	@echo OK, known command dependencies are checked.
 
 /etc/nncp.hjson:
 	nncp-cfgnew > $@
 
+neighbours.json: neighbours.mrkv
+	cat $< | mrkv2td -s '\t+' | td-env ./nncp-mkneigh | json-merge-objects > $@~
+	mv $@~ $@
+
 .PHONY: add-neighbours
-add-neighbours:
-	cat neighbours.mrkv | mrkv2td -s '\s+' | td-foreach
-	cat neighbours.mrkv | mrkv2td -s '\t+' | td2kvpairs | foreach --sh 'env {} ./nncp-addneigh < /etc/nncp.hjson | sponge /etc/nncp.hjson'
+add-neighbours: neighbours.json /etc/nncp.hjson
+	{ hjson-cli -j /etc/nncp.hjson ; cat neighbours.json; } | json-merge-objects | ifne hjson-cli | ifne sponge /etc/nncp.hjson
 
 # chown nncp
 # share pub keys
