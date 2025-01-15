@@ -1,0 +1,2 @@
+ERROR MCD on \S+ write udp \S+ sendto: (network is unreachable|cannot assign requested address)
+s/^/nncp-daemon: /

@@ -5,7 +5,7 @@ default:
 	@false
 
 .PHONY: install
-install: check-deps add-neighbours
+install: check-deps add-neighbours install-directories install-daemons
 
 .PHONY: check-deps
 check-deps:
@@ -29,9 +29,20 @@ neighbours.json: neighbours.mrkv
 add-neighbours: neighbours.json /etc/nncp.hjson
 	{ hjson-cli -j /etc/nncp.hjson ; cat neighbours.json; } | json-merge-objects | ifne hjson-cli | ifne sponge /etc/nncp.hjson
 
-# chown nncp
+.PHONY: install-directories
+install-directories:
+	install -o nncp -d /var/incoming/nncp
+	install -o nncp -d /var/spool/nncp
+
+.PHONY: install-daemons
+install-daemons: /etc/daemons/nncp-daemon.filter
+	CONFPATCH_TYPE=simple-space confpatch /etc/daemontab < daemontab
+	fuser -k -SIGHUP /var/run/dmaster.sock
+
+/etc/daemons/nncp-daemon.filter: nncp-daemon.filter | /etc/daemons
+	cp $< $@
+
+/etc/daemons:
+	mkdir $@
+
 # share pub keys
-# incoming folder
-# daemontab:
-# nncp                    setpriv --reuid nncp --init-groups setpgrp stdfilt -F /etc/daemons/nncp-daemon.filter -- nncp-daemon -autotoss -noprogress
-# nncp-caller             setpriv --reuid nncp --init-groups setpgrp nncp-caller -autotoss -noprogress
