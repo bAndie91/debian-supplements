@@ -34,7 +34,7 @@ while($variable_definition = <STDIN>)
 	next if $variable_definition =~ /^\s*$/;
 	if(my ($varname, $qvalue) = $variable_definition =~ /$variable_definition_regex/)
 	{
-		$value = $qvalue =~ s/^"(.*?)"$/$1/r;
+		my $value = $qvalue =~ s/^"(.*?)"$/$1/r;  # $value is not quoted, $qvalue is the original value which is maybe quoted
 		$variable_set = 0;
 		seek $target_fh, 0, SEEK_SET;
 		while(do{ $pos = tell $target_fh; $target_line = <$target_fh>; })
@@ -45,13 +45,11 @@ while($variable_definition = <STDIN>)
 			{
 				if($old_varname eq $varname)
 				{
-					$old_value = $old_qvalue =~ s/^"(.*?)"$/$1/r;
+					my $old_value = $old_qvalue =~ s/^"(.*?)"$/$1/r;
 					if($old_value ne $value)
 					{
-						{
-							local $/ = undef;
-							$buffer_rest_of_file = <$target_fh>;
-						}
+						local $/ = undef;
+						my $buffer_rest_of_file = <$target_fh>;
 						seek $target_fh, $pos, SEEK_SET;
 						print {$target_fh} "#$target_line\n";
 						print {$target_fh} "$variable_definition\n";
