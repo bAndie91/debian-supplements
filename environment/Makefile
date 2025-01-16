@@ -66,8 +66,8 @@ shell-init-call.jpg: shell-init-call.dot
 	mv $@~ $@
 
 CPAN_MIRROR = http://www.uucp.hu/mirror/cpan/
-.PHONY: install-cpan-repo
-install-cpan-repo:
+.PHONY: setup-cpan-repo
+setup-cpan-repo:
 	if ! cpan <<< "o conf urllist" | grep $(CPAN_MIRROR); then \
 		{ echo "o conf urllist unshift $(CPAN_MIRROR)"; \
 		  echo "o conf commit"; } | \
