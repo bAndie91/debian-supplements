@@ -7,19 +7,19 @@ default:
 .PHONY: install
 install: check-deps add-neighbours install-directories install-daemons
 
+
+COMMAND_DEPS = nncp-cfgnew hjson-cli mrkv2td td-env json-merge-objects ifne sponge jq confpatch fuser dmaster
+COMMAND_DEPS_TARGETS = $(addprefix DEPCHECK/,$(COMMAND_DEPS))
+
 .PHONY: check-deps
 check-deps:
-	@type nncp-cfgnew
-	@type hjson-cli
-	@type mrkv2td
-	@type td-env
-	@type json-merge-objects
-	@type ifne
-	@type sponge
-	@type jq
-	@type confpatch
-	@type fuser
-	@echo OK, known command dependencies are checked.
+	@$(MAKE) -k $(COMMAND_DEPS_TARGETS)
+
+.PHONY: $(COMMAND_DEPS_TARGETS)
+$(COMMAND_DEPS_TARGETS): SHELL = bash
+$(COMMAND_DEPS_TARGETS):
+	@type $(notdir $@) >/dev/null
+
 
 /etc/nncp.hjson:
 	nncp-cfgnew > $@
