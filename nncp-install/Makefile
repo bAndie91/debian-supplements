@@ -16,6 +16,9 @@ check-deps:
 	@type json-merge-objects
 	@type ifne
 	@type sponge
+	@type jq
+	@type confpatch
+	@type fuser
 	@echo OK, known command dependencies are checked.
 
 /etc/nncp.hjson:
