@@ -52,3 +52,5 @@ install-daemons: /etc/daemons/nncp-daemon.filter
 extract-pub-keys: /etc/nncp.hjson
 	@echo "name	$$(hostname)"
 	@hjson-cli -j /etc/nncp.hjson | jq -r '.self | ("id\t"+.id, "signpub\t"+.signpub, "exchpub\t"+.exchpub, "noisepub\t"+.noisepub, "addrs\t")'
+
+# TODO incrontab process incoming dirs
