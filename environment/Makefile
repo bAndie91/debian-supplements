@@ -77,3 +77,10 @@ setup-cpan-repo:
 	  echo "o conf randomize_urllist 0"; \
 	  echo "o conf commit"; } | \
 	cpan
+
+.PHONY: setup-pypi-repo
+setup-pypi-repo:
+	pip config set global.break-system-packages 1
+	pip config set global.index-url http://pypi.lan.uucp.hu/simple/
+	pip config set global.trusted-host pypi.lan.uucp.hu
+
