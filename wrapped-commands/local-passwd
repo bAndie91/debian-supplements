@@ -1,0 +1,2 @@
+## allow users to change their password without knowning the current one
+%users ALL=(root) NOPASSWD: /bin/sh -c /usr/bin/passwd $SUDO_USER
