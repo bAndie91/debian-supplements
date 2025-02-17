@@ -1,19 +1,24 @@
 
 SHELL = /usr/bin/env bash
 
+.PHONY: default
 default:
 	@echo "useful targets: install"
 	false
 
-install: /etc/environment /etc/default/grub /etc/X11/Xsession.d/00path \
+.PHONY: install
+install: setup /etc/environment /etc/default/grub /etc/X11/Xsession.d/00path \
   /etc/sudoers /etc/sudoers.d/default-env-file /etc/inputrc \
   /etc/screenrc /bin/-bash \
   /etc/profile /etc/bash.bashrc \
   /etc/profile.d/bash-only.sh /etc/profile.d/bash.d /etc/profile.d/bash.d/aliases.sh /etc/profile.d/bash.d/history.sh \
 
+.PHONY: clean
 clean:
 	-rm shell-init-call.jpg
 
+.PHONY: setup
+setup: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-local-repo
 
 /etc/environment: sysdefaults.env
 	CONFPATCH_TYPE="environment" confpatch $@ < $<
@@ -84,3 +89,7 @@ setup-pypi-repo:
 	pip config set global.index-url http://pypi.lan.uucp.hu/simple/
 	pip config set global.trusted-host pypi.lan.uucp.hu
 
+.PHONY: setup-flatpak-sideload-local-repo
+setup-flatpak-sideload-local-repo:
+	mkdir -p /var/lib/flatpak/sideload-repos
+	ln -sfT ../repo/ /var/lib/flatpak/sideload-repos/local
