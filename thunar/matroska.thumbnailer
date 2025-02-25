@@ -1,0 +1,7 @@
+[Thumbnailer Entry]
+Version=1.0
+Encoding=UTF-8
+Type=X-Thumbnailer
+Name=Matroska Thumbnailer
+MimeType=video/x-matroska;application/x-matroska;
+Exec=thunar-thumbnailer matroska %s %i %o %u

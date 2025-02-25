@@ -1,18 +1,24 @@
 
 .PHONY: default
 default:
-	@echo Install example: EXEC_PREFIX=~/bin make install
+	@echo Install example: make EXEC_PREFIX=~/bin THUMBNAILERS_PATH=~/.local/share/thumbnailers install
 	false
 
 EXEC_PREFIX = /usr/local/bin
+THUMBNAILERS_PATH = /usr/local/share/thumbnailers
 TUMBLERD_PATH = /usr/lib/x86_64-linux-gnu/tumbler-1/tumblerd
 
-.PHONY: install
-install: $(HOME)/.local/share/thumbnailers/folder.thumbnailer $(EXEC_PREFIX)/thunar-folder-thumbnailer $(TUMBLERD_PATH)
+THUMBNAILERS_SOURCES = $(wildcard *.thumbnailer)
+THUMBNAILERS_TARGETS = $(addprefix $(THUMBNAILERS_PATH)/,$(THUMBNAILERS_SOURCES))
 
-$(HOME)/.local/share/thumbnailers/folder.thumbnailer: folder.thumbnailer
+.PHONY: install
+install: $(TUMBLERD_PATH) \
+	$(EXEC_PREFIX)/thunar-folder-thumbnailer $(EXEC_PREFIX)/thunar-thumbnailer \
+	$(THUMBNAILERS_TARGETS)
+
+$(THUMBNAILERS_TARGETS): $(THUMBNAILERS_PATH)/%: %
 	mkdir -p $(dir $@)
 	cp $< $@
 
-$(EXEC_PREFIX)/thunar-folder-thumbnailer: thunar-folder-thumbnailer
+$(EXEC_PREFIX)/thunar-folder-thumbnailer $(EXEC_PREFIX)/thunar-thumbnailer: $(EXEC_PREFIX)/%: %
 	cp $< $@

@@ -12,7 +12,7 @@ file_path=$2
 thumbnail_path=$3
 file_uri=$4
 
-for folder_thumbnail_file in "$file_path/cover.jpg"
+for folder_thumbnail_file in "$file_path/cover.jpg" "$file_path/poster.jpg"
 do
 	if [ -s "$folder_thumbnail_file" ]
 	then
