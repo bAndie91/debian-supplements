@@ -25,8 +25,8 @@ add-user-sync:
 	adduser $(ADD_SYSTEM_USER_OPTS) --shell /bin/sync sync
 	passwd -d sync
 add-user-reboot:
-	adduser $(ADD_SYSTEM_USER_OPTS) --shell /sbin/rebootlogon reboot
+	adduser $(ADD_SYSTEM_USER_OPTS) --shell /sbin/suid-reboot reboot
 	passwd -d reboot
 add-user-suspend:
-	adduser $(ADD_SYSTEM_USER_OPTS) --shell /usr/sbin/pm-suspend suspend
+	adduser $(ADD_SYSTEM_USER_OPTS) --shell /usr/sbin/suid-pm-suspend suspend
 	passwd -d suspend
