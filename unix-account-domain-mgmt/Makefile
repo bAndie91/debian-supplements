@@ -28,5 +28,5 @@ add-user-reboot:
 	adduser $(ADD_SYSTEM_USER_OPTS) --shell /sbin/suid-reboot reboot
 	passwd -d reboot
 add-user-suspend:
-	adduser $(ADD_SYSTEM_USER_OPTS) --shell /usr/sbin/suid-pm-suspend suspend
+	adduser $(ADD_SYSTEM_USER_OPTS) --shell /sbin/suid-pm-suspend suspend
 	passwd -d suspend
