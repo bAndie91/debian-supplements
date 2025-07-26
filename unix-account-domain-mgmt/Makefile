@@ -17,3 +17,16 @@ ifndef REMOTE
 	$(error Define remote machine to copy $(USER)'s crontab to, by eg. make $@ REMOTE=lab02)
 endif
 	crontab -l | ssh $(REMOTE) 'VISUAL="sleep 1; cat >" crontab -e'
+
+
+ADD_SYSTEM_USER_OPTS = --system --gid `getent group nogroup | td-trans-group | td-select -H GID` --no-create-home --home /sbin
+
+add-user-sync:
+	adduser $(ADD_SYSTEM_USER_OPTS) --shell /bin/sync sync
+	passwd -d sync
+add-user-reboot:
+	adduser $(ADD_SYSTEM_USER_OPTS) --shell /sbin/rebootlogon reboot
+	passwd -d reboot
+add-user-suspend:
+	adduser $(ADD_SYSTEM_USER_OPTS) --shell /usr/sbin/pm-suspend suspend
+	passwd -d suspend
