@@ -1,0 +1,36 @@
+#!/usr/bin/env perl
+
+use Data::Dumper;
+
+while(<STDIN>)
+{
+	chomp;
+	if(/^\s*(?!#)(?<service>\S+)\s+(?<port>\d+)\/(?<proto>\S+)\s*(?<comments>.*)/)
+	{
+		my %s = %+;
+		for my $f (keys %s)
+		{
+			my $len = length $s{$f};
+			$maxlen{$f} = $len if $maxlen{$f} < $len;
+		}
+		push @Service, \%s;
+	}
+}
+
+$cmpkey_fmt = sprintf '%%0%ds %%-%ds %%-%ds %%-%ds', map {$maxlen{$_}} qw/port proto service comments/;
+
+warn sprintf "%d records\n", scalar @Service;
+#warn Dumper $cmpkey_fmt;
+
+sub cmpkey
+{
+	my $s = shift;
+	my $k = sprintf $cmpkey_fmt, map {$s->{$_}} qw/port proto service comments/;
+	#warn $k;
+	return $k;
+}
+
+for my $s (sort {cmpkey($a) cmp cmpkey($b)} @Service)
+{
+	printf "%s\t%s/%s\t%s\n", $s->{service}, $s->{port}, $s->{proto}, $s->{comments};
+}
