@@ -17,20 +17,23 @@ while(<STDIN>)
 	}
 }
 
-$cmpkey_fmt = sprintf '%%0%ds %%-%ds %%-%ds %%-%ds', map {$maxlen{$_}} qw/port proto service comments/;
-
 warn sprintf "%d records\n", scalar @Service;
+
+$cmpkey_fmt = sprintf '%%0%ds %%-%ds %%-%ds %%-%ds', map {$maxlen{$_}} qw/port proto service comments/;
 #warn Dumper $cmpkey_fmt;
 
-sub cmpkey
+for my $s (@Service)
 {
-	my $s = shift;
 	my $k = sprintf $cmpkey_fmt, map {$s->{$_}} qw/port proto service comments/;
 	#warn $k;
-	return $k;
+	$s->{cmpkey} = $k;
 }
 
-for my $s (sort {cmpkey($a) cmp cmpkey($b)} @Service)
+# remove duplicate items
+my %seen;
+my @Service = grep { !$seen{ $_->{cmpkey} }++ } @Service;
+
+for my $s (sort {$a->{cmpkey} cmp $b->{cmpkey}} @Service)
 {
 	printf "%s\t%s/%s\t%s\n", $s->{service}, $s->{port}, $s->{proto}, $s->{comments};
 }
