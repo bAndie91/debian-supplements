@@ -7,17 +7,19 @@ default:
 	false
 
 .PHONY: install
-install: setup /etc/environment /etc/default/grub /etc/X11/Xsession.d/00path \
+install: setup-software-repos /etc/environment /etc/default/grub /etc/X11/Xsession.d/00path \
   /etc/sudoers /etc/sudoers.d/default-env-file /etc/inputrc \
   /etc/screenrc /bin/-bash \
   /etc/profile /etc/bash.bashrc \
   /etc/profile.d/bash-only.sh /etc/profile.d/bash.d /etc/profile.d/bash.d/aliases.sh /etc/profile.d/bash.d/history.sh \
+  /etc/sysctl.d/6b2dc8bb-5598-45e7-a163-075526dbe81b.conf \
+  
 
 .PHONY: clean
 clean:
 	-rm shell-init-call.jpg
 
-.PHONY: setup
+.PHONY: setup-software-repos
 setup: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-local-repo
 
 /etc/environment: sysdefaults.env
@@ -93,3 +95,6 @@ setup-pypi-repo:
 setup-flatpak-sideload-local-repo:
 	mkdir -p /var/lib/flatpak/sideload-repos
 	ln -sfT ../repo/ /var/lib/flatpak/sideload-repos/local
+
+/etc/sysctl.d/6b2dc8bb-5598-45e7-a163-075526dbe81b.conf: sysctl.6b2dc8bb-5598-45e7-a163-075526dbe81b.conf
+	cp $< $@
