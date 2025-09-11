@@ -1,3 +1,4 @@
 gemini	1965/tcp
 squid-proxy	3128/tcp
 apt-cacher-ng	3128/tcp	acng
+workrave	27273/tcp
