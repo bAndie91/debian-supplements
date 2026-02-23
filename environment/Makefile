@@ -108,3 +108,10 @@ setup-flatpak-sideload-local-repo:
 
 /etc/sysctl.d/6b2dc8bb-5598-45e7-a163-075526dbe81b.conf: sysctl.6b2dc8bb-5598-45e7-a163-075526dbe81b.conf
 	$(INSTALL_WRAPPER) cp $< $@
+
+
+.PHONY: fix-grubenv
+fix-grubenv:
+	cat /boot/grub/grubenv > grubenv.bak
+	grub-editenv /boot/grub/grubenv create
+	grub-editenv grubenv.bak list | foreach --errexit grub-editenv /boot/grub/grubenv set {}
