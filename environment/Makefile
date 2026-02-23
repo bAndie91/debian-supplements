@@ -4,15 +4,15 @@ INSTALL_WRAPPER =
 
 .PHONY: default
 default:
-	$(info useful targets: install)
-	$(info useful variables: INSTALL_WRAPPER)
+	$(info useful targets: install-all)
+	$(info useful variables: INSTALL_WRAPPER [specify eg. INSTALL_WRAPPER=sudo])
 
 SOURCE_XSESSION_SCRIPTS = $(shell git ls Xsession.d/)
 XSESSION_SCRIPTS_PREFIX = /etc/X11/
 TARGET_XSESSION_SCRIPTS = $(addprefix $(XSESSION_SCRIPTS_PREFIX),$(SOURCE_XSESSION_SCRIPTS))
 
-.PHONY: install
-install: setup-software-repos /etc/environment /etc/default/grub $(TARGET_XSESSION_SCRIPTS) \
+.PHONY: install-all
+install-all: setup-software-repos /etc/environment /etc/default/grub $(TARGET_XSESSION_SCRIPTS) \
   /etc/sudoers /etc/sudoers.d/default-env-file /etc/inputrc \
   /etc/screenrc /bin/-bash \
   /etc/profile /etc/bash.bashrc \
@@ -48,6 +48,7 @@ setup-software-repos: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-loc
 
 /etc/default/grub: default-grub
 	$(INSTALL_WRAPPER) CONFPATCH_TYPE="environment" confpatch $@ < $<
+	update-grub
 
 $(TARGET_XSESSION_SCRIPTS): $(XSESSION_SCRIPTS_PREFIX)%: %
 	$(INSTALL_WRAPPER) cp $< $@
