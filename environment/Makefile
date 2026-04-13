@@ -116,3 +116,11 @@ fix-grubenv:
 	cat /boot/grub/grubenv > grubenv.bak
 	grub-editenv /boot/grub/grubenv create
 	grub-editenv grubenv.bak list | foreach --errexit grub-editenv /boot/grub/grubenv set {}
+
+
+first_search_domain: /etc/resolv.conf
+	awk '$$1 == "search" {print $$2}' $< > $@~
+	mv $@~ $@
+
+/etc/hosts: hosts first_search_domain
+	cat $< | sd --fixed-strings '$${HOSTNAME}' '$(shell hostname)' | sd --fixed-strings '$${DOMAINNAME}' "$$(cat first_search_domain)" | $(INSTALL_WRAPPER) CONFPATCH_TYPE="simple-space" confpatch $@
