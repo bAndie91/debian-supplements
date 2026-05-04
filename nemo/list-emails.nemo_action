@@ -1,0 +1,8 @@
+[Nemo Action]
+Name=List emails
+Comment=Open directory in gtabdata-emails to list Email files
+Active=true
+Exec=xe -j100 -a gtabdata-emails -- %F
+Icon-Name=email
+Selection=notnone
+Extensions=dir;
