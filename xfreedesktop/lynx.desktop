@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Lynx (web and gopher browser)
+Comment=Browse gopher sites with Lynx
+MimeType=x-scheme-handler/gopher;x-scheme-handler/ftp
+Exec=lynx %U
+Icon=/usr/local/share/icon/lynx.png
+Terminal=true
+Type=Application
+Categories=Network;WebBrowser;
+NoDisplay=true
