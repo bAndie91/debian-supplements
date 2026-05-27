@@ -1,6 +1,6 @@
 if ! alias ls 2>/dev/null >&2
 then
-	alias ls='ls --color'
+	alias ls='ls --color=auto'
 fi
 
 if [ -z "$LS_COLORS" ] && type dircolors >/dev/null 2>&1
