@@ -13,10 +13,10 @@ TARGET_XSESSION_SCRIPTS = $(addprefix $(XSESSION_SCRIPTS_PREFIX),$(SOURCE_XSESSI
 
 .PHONY: install-all
 install-all: setup-software-repos /etc/environment /etc/default/grub $(TARGET_XSESSION_SCRIPTS) \
-  /etc/sudoers /etc/sudoers.d/default-env-file /etc/inputrc \
+  /etc/sudoers /etc/sudoers.d/default-env-file \
   /etc/screenrc /bin/-bash \
   /etc/profile /etc/bash.bashrc \
-  /etc/profile.d/bash-only.sh /etc/profile.d/bash.d /etc/profile.d/bash.d/aliases.sh /etc/profile.d/bash.d/history.sh \
+  shell-supplements \
   /etc/sysctl.d/6b2dc8bb-5598-45e7-a163-075526dbe81b.conf \
   
 
@@ -52,6 +52,9 @@ setup-software-repos: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-loc
 
 $(TARGET_XSESSION_SCRIPTS): $(XSESSION_SCRIPTS_PREFIX)%: %
 	$(INSTALL_WRAPPER) cp $< $@
+
+.PHONY: shell-supplements
+shell-supplements: /etc/profile.d/bash-only.sh /etc/profile.d/bash.d/aliases.sh /etc/profile.d/bash.d/history.sh /etc/inputrc
 
 /etc/profile.d/bash-only.sh: bash-only.sh
 	$(INSTALL_WRAPPER) install $< $@
