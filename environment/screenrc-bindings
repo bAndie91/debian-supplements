@@ -1,2 +1,15 @@
+# move window
 bind < number -1
 bind > number +1
+
+# switch window
+bindkey "^[[5;5~" prev  # ctrl-pgup xterm
+bindkey "^[[6;5~" next  # ctrl-pgdn xterm
+bindkey "^[[5\^" prev  # ctrl-pgup urxvt
+bindkey "^[[6\^" next  # ctrl-pgdn urxvt
+
+# enter copy mode and scroll up/down
+bindkey "^[[5@" eval "copy" "stuff \002"  # ctrl-shift-pgup urxvt
+bindkey "^[[6@" eval "copy" "stuff \006"  # ctrl-shift-pgdn urxvt
+bindkey -m "^[[5@" stuff "\002"
+bindkey -m "^[[6@" stuff "\006"

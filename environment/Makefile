@@ -44,7 +44,7 @@ setup-software-repos: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-loc
 
 /etc/screenrc: screenrc screenrc-bindings
 	$(INSTALL_WRAPPER) CONFPATCH_TYPE="simple-space" confpatch $@ < screenrc
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^bind\s+(\S+)\s+(.+)$$' confpatch $@ < screenrc-bindings
+	$(INSTALL_WRAPPER) CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^bind(?:key|)\s+((?:-m |)\S+)\s+(.+)$$' confpatch $@ < screenrc-bindings
 
 /etc/default/grub: default-grub
 	$(INSTALL_WRAPPER) CONFPATCH_TYPE="environment" confpatch $@ < $<
