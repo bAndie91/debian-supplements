@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# cups filter command arguments: <job-id> <user> <title> <copies> <options> [file]
+
+set -e
+set -o pipefail
+set -u
+
+input=${6:-/dev/stdin}
+
+tmp=$(mktemp -d)
+
+cat "$input" > "$tmp/in.odt"
+
+HOME=$tmp
+export HOME
+cd "$tmp"
+
+soffice --headless --safe-mode \
+    --convert-to pdf \
+    --outdir "$tmp" \
+    "$tmp/in.odt" >&2
+
+cat "$tmp/in.pdf"
+
+cd /
+rm -rf "$tmp"
