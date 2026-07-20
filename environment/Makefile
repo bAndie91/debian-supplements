@@ -30,7 +30,7 @@ clean:
 	-rm shell-init-call.jpg
 
 .PHONY: setup-software-repos
-setup-software-repos: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-local-repo
+setup-software-repos: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-local-repo setup-apt-proxy
 
 /etc/environment: sysdefaults.env
 	$(INSTALL_WRAPPER) CONFPATCH_TYPE="environment" confpatch $@ < $<
@@ -110,6 +110,11 @@ setup-flatpak-sideload-local-repo:
 	$(INSTALL_WRAPPER) mkdir -p /var/lib/flatpak/sideload-repos
 	$(INSTALL_WRAPPER) ln -sfT ../repo/ /var/lib/flatpak/sideload-repos/local
 
+.PHONY: setup-apt-proxy
+setup-apt-proxy: /etc/apt/apt.conf.d/acng-proxy
+/etc/apt/apt.conf.d/acng-proxy: apt.acng-proxy.conf
+	$(INSTALL_WRAPPER) cp $< $@
+
 /etc/sysctl.d/6b2dc8bb-5598-45e7-a163-075526dbe81b.conf: sysctl.6b2dc8bb-5598-45e7-a163-075526dbe81b.conf
 	$(INSTALL_WRAPPER) cp $< $@
 
@@ -127,3 +132,5 @@ first_search_domain: /etc/resolv.conf
 
 /etc/hosts: hosts first_search_domain
 	cat $< | sd --fixed-strings '$${HOSTNAME}' '$(shell hostname)' | sd --fixed-strings '$${DOMAINNAME}' "$$(cat first_search_domain)" | $(INSTALL_WRAPPER) CONFPATCH_TYPE="simple-space" confpatch $@
+
+
