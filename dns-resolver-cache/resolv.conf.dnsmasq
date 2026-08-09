@@ -1,2 +1,2 @@
-search lan.uucp.hu dn1.uucp.hu
-nameserver 192.168.32.12
+search int.uucp.hu dn1.uucp.hu
+nameserver 192.168.32.15

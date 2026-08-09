@@ -102,8 +102,8 @@ setup-cpan-repo:
 .PHONY: setup-pypi-repo
 setup-pypi-repo:
 	$(INSTALL_WRAPPER) pip config --global set global.break-system-packages 1
-	$(INSTALL_WRAPPER) pip config --global set global.index-url http://pypi.lan.uucp.hu/simple/
-	$(INSTALL_WRAPPER) pip config --global set global.trusted-host pypi.lan.uucp.hu
+	$(INSTALL_WRAPPER) pip config --global set global.index-url http://pypi.int.uucp.hu/simple/
+	$(INSTALL_WRAPPER) pip config --global set global.trusted-host pypi.int.uucp.hu
 
 .PHONY: setup-flatpak-sideload-local-repo
 setup-flatpak-sideload-local-repo:
