@@ -33,21 +33,21 @@ clean:
 setup-software-repos: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-local-repo setup-apt-proxy
 
 /etc/environment: sysdefaults.env
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="environment" confpatch $@ < $<
+	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="environment" confpatch $@ < $<
 
 /etc/sudoers.d/default-env-file: sudoers-default-env-file
 	$(INSTALL_WRAPPER) cp $< $@
 	$(INSTALL_WRAPPER) chmod 0440 $@
 
 /etc/sudoers: sudoers-default-secure-path
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^([^\s=]+\s+[^\s=]+)=(.*)' confpatch $@ < $<
+	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="custom" CONFPATCH_KV_PATTERN='^([^\s=]+\s+[^\s=]+)=(.*)' confpatch $@ < $<
 
 /etc/screenrc: screenrc screenrc-bindings
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="simple-space" confpatch $@ < screenrc
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^bind(?:key|)\s+((?:-m |)\S+)\s+(.+)$$' confpatch $@ < screenrc-bindings
+	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="simple-space" confpatch $@ < screenrc
+	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="custom" CONFPATCH_KV_PATTERN='^bind(?:key|)\s+((?:-m |)\S+)\s+(.+)$$' confpatch $@ < screenrc-bindings
 
 /etc/default/grub: default-grub
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="environment" confpatch $@ < $<
+	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="environment" confpatch $@ < $<
 	update-grub
 
 $(TARGET_XSESSION_SCRIPTS): $(XSESSION_SCRIPTS_PREFIX)%: %
@@ -66,8 +66,8 @@ shell-supplements: /etc/profile.d/bash-only.sh /etc/profile.d/bash.d/aliases.sh 
 	$(INSTALL_WRAPPER) install $< $@
 
 /etc/inputrc: inputrc-bindings inputrc-options
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^([^:]+):\s*(.+)$$' confpatch $@ < inputrc-bindings
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="custom" CONFPATCH_KV_PATTERN='^set\s+(\S+)\s+(.+)$$' confpatch $@ < inputrc-options
+	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="custom" CONFPATCH_KV_PATTERN='^([^:]+):\s*(.+)$$' confpatch $@ < inputrc-bindings
+	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="custom" CONFPATCH_KV_PATTERN='^set\s+(\S+)\s+(.+)$$' confpatch $@ < inputrc-options
 
 CHECK_PATCH_APPLIED_CMD = patch --unified --ignore-whitespace --reverse --dry-run --force
 
@@ -131,6 +131,5 @@ first_search_domain: /etc/resolv.conf
 	mv $@~ $@
 
 /etc/hosts: hosts first_search_domain
-	cat $< | sd --fixed-strings '$${HOSTNAME}' '$(shell hostname)' | sd --fixed-strings '$${DOMAINNAME}' "$$(cat first_search_domain)" | $(INSTALL_WRAPPER) CONFPATCH_TYPE="simple-space" confpatch $@
-
+	cat $< | sd --fixed-strings '$${HOSTNAME}' '$(shell hostname)' | sd --fixed-strings '$${DOMAINNAME}' "$$(cat first_search_domain)" | $(INSTALL_WRAPPER) CONFPATCH_FORMAT="simple-space" confpatch $@
 

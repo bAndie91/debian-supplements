@@ -17,7 +17,7 @@ install-cups-filters: $(CUPS_CONFIG_TARGETS) $(APPARMOR_CONFIG_TARGETS)
 
 $(CUPS_CONFIG_TARGETS): $(ETCPREFIX)/etc/cups/%: %
 $(CUPS_CONFIG_TARGETS):
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="simple-space" confpatch $@ < $<
+	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="simple-space" confpatch $@ < $<
 
 $(CUPS_CONFIG_TARGETS): FORCE
 $(CUPS_CONFIG_TARGETS): $(CUPS_FILTER_TARGETS)
@@ -27,7 +27,7 @@ $(CUPS_FILTER_TARGETS): $(LIBPREFIX)/lib/cups/filter/%: filter/%
 
 
 $(APPARMOR_CONFIG_TARGETS): $(ETCPREFIX)/etc/apparmor.d/local/%: apparmor/%
-	$(INSTALL_WRAPPER) CONFPATCH_TYPE="simple-space" CONFPATCH_POST_CHANGE="$(INSTALL_WRAPPER) service apparmor reload" \
+	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="simple-space" CONFPATCH_POST_CHANGE="$(INSTALL_WRAPPER) service apparmor reload" \
 		confpatch $@ < $<
 
 $(APPARMOR_CONFIG_TARGETS): FORCE

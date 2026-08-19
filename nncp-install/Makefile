@@ -39,7 +39,7 @@ install-directories:
 
 .PHONY: install-daemons
 install-daemons: /etc/daemons/nncp-daemon.filter
-	CONFPATCH_TYPE=simple-space confpatch /etc/daemontab < daemontab
+	CONFPATCH_FORMAT=simple-space confpatch /etc/daemontab < daemontab
 	fuser -k -SIGHUP /var/run/dmaster.sock
 
 /etc/daemons/nncp-daemon.filter: nncp-daemon.filter | /etc/daemons
