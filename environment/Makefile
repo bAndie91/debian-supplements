@@ -7,15 +7,13 @@ default:
 	$(info useful targets: install-all)
 	$(info useful variables: INSTALL_WRAPPER [specify eg. INSTALL_WRAPPER=sudo])
 
-SOURCE_XSESSION_SCRIPTS = $(shell git ls Xsession.d/)
+SOURCE_XSESSION_SCRIPTS = $(shell git ls-files --cached Xsession.d/)
 XSESSION_SCRIPTS_PREFIX = /etc/X11/
 TARGET_XSESSION_SCRIPTS = $(addprefix $(XSESSION_SCRIPTS_PREFIX),$(SOURCE_XSESSION_SCRIPTS))
 
 .PHONY: install-all
-install-all: setup-software-repos /etc/environment /etc/default/grub $(TARGET_XSESSION_SCRIPTS) \
-  /etc/sudoers /etc/sudoers.d/default-env-file \
-  /etc/screenrc /bin/-bash \
-  /etc/profile /etc/bash.bashrc \
+install-all: setup-software-repos /etc/default/grub $(TARGET_XSESSION_SCRIPTS) \
+  env-supplements \
   shell-supplements \
   /etc/sysctl.d/6b2dc8bb-5598-45e7-a163-075526dbe81b.conf \
   
@@ -32,6 +30,15 @@ clean:
 .PHONY: setup-software-repos
 setup-software-repos: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-local-repo setup-apt-proxy
 
+
+# files responsible to set environment variables
+.PHONY: env-supplements
+env-supplements: \
+  /etc/environment \
+  /etc/sudoers /etc/sudoers.d/default-env-file \
+  /etc/profile /etc/bash.bashrc \
+
+
 /etc/environment: sysdefaults.env
 	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="environment" confpatch $@ < $<
 
@@ -42,9 +49,14 @@ setup-software-repos: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-loc
 /etc/sudoers: sudoers-default-secure-path
 	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="custom" CONFPATCH_KV_PATTERN='^([^\s=]+\s+[^\s=]+)=(.*)' confpatch $@ < $<
 
+
+.PHONY: config-gnu-screen
+config-gnu-screen: /etc/screenrc
+
 /etc/screenrc: screenrc screenrc-bindings
 	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="simple-space" confpatch $@ < screenrc
 	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="custom" CONFPATCH_KV_PATTERN='^bind(?:key|)\s+((?:-m |)\S+)\s+(.+)$$' confpatch $@ < screenrc-bindings
+
 
 /etc/default/grub: default-grub
 	$(INSTALL_WRAPPER) CONFPATCH_FORMAT="environment" confpatch $@ < $<
@@ -53,8 +65,14 @@ setup-software-repos: setup-cpan-repo setup-pypi-repo setup-flatpak-sideload-loc
 $(TARGET_XSESSION_SCRIPTS): $(XSESSION_SCRIPTS_PREFIX)%: %
 	$(INSTALL_WRAPPER) cp $< $@
 
+
 .PHONY: shell-supplements
-shell-supplements: /etc/profile.d/bash-only.sh /etc/profile.d/bash.d/aliases.sh /etc/profile.d/bash.d/history.sh /etc/inputrc
+shell-supplements: \
+  /bin/-bash \
+  /etc/profile.d/bash-only.sh \
+  /etc/profile.d/bash.d/aliases.sh \
+  /etc/profile.d/bash.d/history.sh \
+  /etc/inputrc
 
 /etc/profile.d/bash-only.sh: bash-only.sh
 	$(INSTALL_WRAPPER) install $< $@
