@@ -5,3 +5,7 @@ Type=X-Thumbnailer
 Name=MP4 Thumbnailer
 MimeType=video/mp4
 Exec=thunar-thumbnailer mp4 %s %i %o %u
+
+[X-Tumbler Settings]
+# take precedence over built-in thumbnailers
+Priority=9

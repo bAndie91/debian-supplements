@@ -27,7 +27,10 @@ case "$typename" in
 	mkvextract -q "$file_path" attachments "$cover_pic_aid:/dev/stdout" | convert - "$thumbnail_path" >&2
 	;;
 (mp4)
-	exiftool -b -CoverArt "$file_path" | convert - "$thumbnail_path" >&2
+	for exiftag in CoverArt ThumbnailImage PreviewImage
+	do
+		exiftool -b -$exiftag "$file_path" | convert - -auto-orient -thumbnail "${tn_size}x${tn_size}" "$thumbnail_path" >&2 && break || true
+	done
 	;;
 (*)
 	echo "$0: not yet supported: $typename" >&2
