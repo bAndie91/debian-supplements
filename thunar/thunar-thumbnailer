@@ -1,17 +1,20 @@
 #!/bin/bash
 
 # arguments example:
-# matroska 256 /home/hband/mnt/pub/media/channels/Zállatorvos/1.mkv /tmp/tumbler-MCYFW2.png file:///home/hband/mnt/pub/media/channels/Z%C3%A1llatorvos/1.mkv
+# matroska 256 /home/username/video.mkv /tmp/tumbler-MCYFW2.png file:///home/username/video.mkv
 
 set -e
 set -o pipefail
 set -u
 
 typename=$1
-size=$2
+tn_size=$2
 file_path=$3
 thumbnail_path=$4
 file_uri=$5
+
+mkv_info_json() { mkvmerge --identify  --identification-format json "$1"; }
+json_find_cover_picture_attachment_id() { jq -r '[.attachments[] | select((.file_name | match("^(small_|)cover")) and (.content_type | match("^image")))] | .[0].id'; }
 
 case "$typename" in
 (matroska)
@@ -20,11 +23,11 @@ case "$typename" in
 		type "$dependency" >/dev/null
 	done
 	
-	mkv_info_json() { mkvmerge --identify  --identification-format json "$1"; }
-	json_find_cover_picture_attachment_id() { jq -r '[.attachments[] | select(.file_name == "cover" and (.content_type | match("^image")))] | .[0].id'; }
-	
 	cover_pic_aid=`mkv_info_json "$file_path" | json_find_cover_picture_attachment_id`
-	mkvextract -q "$file_path" attachments "$cover_pic_aid:/dev/stdout" | convert - "$thumbnail_path"
+	mkvextract -q "$file_path" attachments "$cover_pic_aid:/dev/stdout" | convert - "$thumbnail_path" >&2
+	;;
+(mp4)
+	exiftool -b -CoverArt "$file_path" | convert - "$thumbnail_path" >&2
 	;;
 (*)
 	echo "$0: not yet supported: $typename" >&2
@@ -37,5 +40,9 @@ if [ ! -s "$thumbnail_path" ]
 then
 	# clear the old thumbnail from cache if we could not generate a new one
 	gdbus call --session --dest=org.freedesktop.thumbnails.Cache1 --object-path /org/freedesktop/thumbnails/Cache1 \
-		--method org.freedesktop.thumbnails.Cache1.Delete "['$file_uri']" >/dev/null
+		--method org.freedesktop.thumbnails.Cache1.Delete "['$file_uri']" >&2
 fi
+
+# Hint:
+# delete all thumbnails of files under <FS-PATH> :
+# gdbus call --session --dest=org.freedesktop.thumbnails.Cache1 --object-path /org/freedesktop/thumbnails/Cache1 --method org.freedesktop.thumbnails.Cache1.Cleanup "[\"$(g_filename_to_uri "<FS-PATH>")\"]" 0
