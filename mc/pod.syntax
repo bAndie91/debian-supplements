@@ -1,0 +1,89 @@
+# POD (Plain Old Documentation) syntax for Midnight Commander mcedit.
+# Inspired by nroff.syntax; uses mcedit's context/keyword highlighting.
+
+wholechars abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
+
+context default
+    spellcheck
+    # POD directives
+    keyword whole linestart =pod brightcyan
+    keyword whole linestart =cut brightcyan
+    keyword whole linestart =head1 brightcyan
+    keyword whole linestart =head2 brightcyan
+    keyword whole linestart =head3 brightcyan
+    keyword whole linestart =head4 brightcyan
+    keyword whole linestart =over brightcyan
+    keyword whole linestart =back brightcyan
+    keyword whole linestart =item brightcyan
+    keyword whole linestart =begin brightcyan
+    keyword whole linestart =end brightcyan
+    keyword whole linestart =for brightcyan
+    keyword whole linestart =encoding brightcyan
+    # Escaped literal characters
+    keyword E<lt> brightgreen
+    keyword E<gt> brightgreen
+    keyword E<verbar> brightgreen
+    keyword E<sol> brightgreen
+    keyword E<amp> brightgreen
+    keyword E<quot> brightgreen
+    keyword E<apos> brightgreen
+    keyword E<nbsp> brightgreen
+    # Common named character entities
+    keyword E<mdash> brightgreen
+    keyword E<ndash> brightgreen
+    keyword E<copy> brightgreen
+    keyword E<reg> brightgreen
+    keyword E<eacute> brightgreen
+    keyword E<ouml> brightgreen
+
+# Headings: highlight the directive and its title through end of line.
+context exclusive linestart =head1 \n yellow
+    spellcheck
+context exclusive linestart =head2 \n yellow
+    spellcheck
+context exclusive linestart =head3 \n yellow
+    spellcheck
+context exclusive linestart =head4 \n yellow
+    spellcheck
+
+# Other directives.
+context exclusive linestart =pod \n brightcyan
+context exclusive linestart =cut \n brightcyan
+context exclusive linestart =over \n cyan
+context exclusive linestart =back \n cyan
+context exclusive linestart =item \n cyan
+    spellcheck
+context exclusive linestart =begin \n magenta
+context exclusive linestart =end \n magenta
+context exclusive linestart =for \n magenta
+context exclusive linestart =encoding \n magenta
+
+# Verbatim paragraphs conventionally begin with whitespace.
+# These contexts highlight each indented line; a blank line ends the context.
+context exclusive linestart \s \n green
+context exclusive linestart \t \n green
+
+# POD inline formatting codes. mcedit contexts do not parse nested markup,
+# but these cover the common non-nested forms.
+context B< > yellow
+context C< > brightgreen
+context F< > brightgreen
+context I< > brightred
+context L< > brightcyan
+context S< > cyan
+context X< > brown
+context Z< > gray
+context E< > brightmagenta
+
+# Angle-bracket variants, commonly used when the text itself contains >.
+context B<< >> yellow
+context C<< >> brightgreen
+context F<< >> brightgreen
+context I<< >> brightred
+context L<< >> brightcyan
+context S<< >> cyan
+context X<< >> brown
+context E<< >> brightmagenta
+
+# Formatting-code names are useful to spot even when the editor cannot
+# represent nested or multiline formatting reliably.
