@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-link">
+    <glob pattern="*.link" weight="60" case-sensitive="false"/>
+    <sub-class-of type="text/plain"/>
+    <comment>plain text file containing path to an other file</comment>
+    <icon name="emblem-symbolic-link"/>
+  </mime-type>
+</mime-info>

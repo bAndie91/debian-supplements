@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Terminal=false
+Exec=stdout2env XLINKTARGET cat %f -- substenv mimeopen-gui $XLINKTARGET
+Type=Application
+Categories=GTK;Application;Utility;
+Name=x-Link file opener
+MimeType=application/x-link
