@@ -3,8 +3,8 @@ import sys, os, math, struct, zlib, subprocess
 
 SIZES = [16, 24, 32, 48, 64, 72, 96]   # 16 = native glyphs; drop it if you don't want it
 BASE = 16.0   # nominal size of the native glyphs; size N is scaled by N/BASE
-SIGMA = 0.55   # smoothing radius in source pixels: larger = straighter diagonals, rounder corners
-THRESH = 0.5   # lower = fatter shapes, higher = thinner
+SIGMA = 0.45   # smoothing radius in source pixels: larger = straighter diagonals, rounder corners
+THRESH = 0.45   # lower = fatter shapes, higher = thinner
 PAD = 2        # empty margin in source pixels, so the outer contour gets smoothed too
 
 # cursorfont.h names, in glyph order: glyph 2*i is the shape, 2*i+1 its mask
@@ -127,9 +127,11 @@ def main(bdf, outdir):
     work = os.path.join(outdir, '.work')
     os.makedirs(cdir, exist_ok=True); os.makedirs(work, exist_ok=True)
     for i, name in enumerate(NAMES):
+        print(name)
         src, mask = glyphs.get(2 * i), glyphs.get(2 * i + 1)
         if not src or not mask or not (pixels(src) | pixels(mask)):
-            print('skip', name); continue
+            print('skip', name)
+            continue
         shape, body, W, H, hx, hy = compose(src, mask)
         cfg = []
         for size in SIZES:
