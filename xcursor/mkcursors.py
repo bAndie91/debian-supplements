@@ -3,7 +3,9 @@ import sys, os, math, struct, zlib, subprocess
 
 SIZES = [16, 24, 32, 48, 64, 72, 96]   # 16 = native glyphs; drop it if you don't want it
 BASE = 16.0   # nominal size of the native glyphs; size N is scaled by N/BASE
-SS = 4        # supersampling per axis (anti-aliasing for non-integer scales)
+SIGMA = 0.55   # smoothing radius in source pixels: larger = straighter diagonals, rounder corners
+THRESH = 0.5   # lower = fatter shapes, higher = thinner
+PAD = 2        # empty margin in source pixels, so the outer contour gets smoothed too
 
 # cursorfont.h names, in glyph order: glyph 2*i is the shape, 2*i+1 its mask
 NAMES = """X_cursor arrow based_arrow_down based_arrow_up boat bogosity
@@ -60,39 +62,53 @@ def pixels(g):
 
 def compose(src, mask):
     S, M = pixels(src), pixels(mask)
-    allp = S | M
-    minx = min(x for x, y in allp); maxx = max(x for x, y in allp)
-    miny = min(y for x, y in allp); maxy = max(y for x, y in allp)
+    U = S | M
+    minx = min(x for x, y in U) - PAD; maxx = max(x for x, y in U) + PAD
+    miny = min(y for x, y in U) - PAD; maxy = max(y for x, y in U) + PAD
     W, H = maxx - minx + 1, maxy - miny + 1
-    grid = [[0] * W for _ in range(H)]
-    for (x, y) in M: grid[maxy - y][x - minx] = 1      # white outline
-    for (x, y) in S: grid[maxy - y][x - minx] = 2      # black body
-    # X core hotspot = glyph origin
-    return grid, W, H, -minx, maxy + 1
+    shape = [[0] * W for _ in range(H)]   # whole silhouette (outline + body)
+    body = [[0] * W for _ in range(H)]    # black part only
+    for (x, y) in U: shape[maxy - y][x - minx] = 1
+    for (x, y) in S: body[maxy - y][x - minx] = 1
+    return shape, body, W, H, -minx, maxy + 1   # hotspot = glyph origin
 
-def scale(grid, W, H, f):
+def weights(n_out, f):
+    # for each output pixel: [(source index, gaussian weight)] around its center in source space
+    R = int(math.ceil(3 * SIGMA))
+    res = []
+    for t in range(n_out):
+        c = (t + 0.5) / f - 0.5
+        i0 = int(math.floor(c))
+        raw = [(i, math.exp(-((i - c) ** 2) / (2 * SIGMA ** 2)))
+               for i in range(i0 - R, i0 + R + 2)]
+        tot = sum(w for _, w in raw)
+        res.append([(i, w / tot) for i, w in raw])
+    return res
+
+def blur(grid, W, H, wx, wy, tw, th):
+    # separable: horizontal pass on source rows, then vertical pass
+    tmp = []
+    for j in range(H):
+        row = grid[j]
+        tmp.append([sum(w * row[i] for i, w in wx[tx] if 0 <= i < W) for tx in range(tw)])
+    return [[sum(w * tmp[j][tx] for j, w in wy[ty] if 0 <= j < H) for tx in range(tw)]
+            for ty in range(th)]
+
+def scale(shape, body, W, H, f):
     tw, th = max(1, math.ceil(W * f)), max(1, math.ceil(H * f))
-    n = SS * SS
+    if f == 1.0:                       # native size: keep the original pixels untouched
+        Sh, B = shape, body
+    else:
+        wx, wy = weights(tw, f), weights(th, f)
+        Sh = blur(shape, W, H, wx, wy, tw, th)
+        B = blur(body, W, H, wx, wy, tw, th)
     rows = []
     for ty in range(th):
-        yi = [int((ty + (j + .5) / SS) / f) for j in range(SS)]
         row = bytearray()
         for tx in range(tw):
-            xi = [int((tx + (j + .5) / SS) / f) for j in range(SS)]
-            white = black = 0
-            for sy in yi:
-                if sy >= H: continue
-                gr = grid[sy]
-                for sx in xi:
-                    if sx >= W: continue
-                    v = gr[sx]
-                    if v == 1: white += 1
-                    elif v == 2: black += 1
-            a = white + black
-            if a:
-                row += bytes((round(255 * white / a),) * 3 + (round(255 * a / n),))
-            else:
-                row += bytes(4)
+            if B[ty][tx] >= THRESH:    row += b'\x00\x00\x00\xff'   # black
+            elif Sh[ty][tx] >= THRESH: row += b'\xff\xff\xff\xff'   # white outline
+            else:                      row += b'\x00\x00\x00\x00'   # transparent
         rows.append(bytes(row))
     return tw, th, rows
 
@@ -114,12 +130,12 @@ def main(bdf, outdir):
         src, mask = glyphs.get(2 * i), glyphs.get(2 * i + 1)
         if not src or not mask or not (pixels(src) | pixels(mask)):
             print('skip', name); continue
-        grid, W, H, hx, hy = compose(src, mask)
+        shape, body, W, H, hx, hy = compose(src, mask)
         cfg = []
         for size in SIZES:
             f = size / BASE
             png = os.path.abspath(os.path.join(work, '%s-%d.png' % (name, size)))
-            tw, th, rows = scale(grid, W, H, f)
+            tw, th, rows = scale(shape, body, W, H, f)
             write_png(png, tw, th, rows)
             xh = max(0, min(tw - 1, round(hx * f)))
             yh = max(0, min(th - 1, round(hy * f)))
