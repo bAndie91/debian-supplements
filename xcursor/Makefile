@@ -85,21 +85,48 @@ watch \
 X_cursor \
 xterm
 
-LINKNAMES = all-scroll \
+LINKNAMES = 00008160000006810000408080010102 \
+028006030e0e7ebffc7f7070c0600140 \
+08e8e1c95fe2fc01f976f1e063a24ccd \
+14fef782d02440884392942c11205230 \
+2870a09082c103050810ffdffffe0204 \
+5c6cd98b3f3ebcb1f9c7f1c204630408 \
+9d800788f1b08800ae810202380a0822 \
+all-scroll \
 cell \
 col-resize \
+d9ce0ab605698f320427677b458ad60b \
 default \
+dot_box_mask \
+e29285e634086352946a0e7090d73106 \
+e-resize \
 ew-resize \
+fcf1c3c7cd4491d801f1e1c78f100000 \
 grabbing \
+hand \
+h_double_arrow \
 help \
 move \
+ne-resize \
 not-allowed \
+n-resize \
 ns-resize \
+nw-resize \
 pointer \
+pointing_hand \
 progress \
 row-resize \
+se-resize \
+size_all \
+size_hor \
+size_ver \
+s-resize \
+sw-resize \
 text \
-wait
+v_double_arrow \
+wait \
+w-resize
+
 
 
 TARGET_FILES = $(foreach name,$(FILENAMES),$(PREFIX)/$(THEME)/cursors/$(name))
