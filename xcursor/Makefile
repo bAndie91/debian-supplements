@@ -133,6 +133,9 @@ TARGET_FILES = $(foreach name,$(FILENAMES),$(PREFIX)/$(THEME)/cursors/$(name))
 TARGET_LINKS = $(foreach name,$(LINKNAMES),$(PREFIX)/$(THEME)/cursors/$(name))
 
 
+$(PREFIX)/$(THEME)/index.theme: $(THEME)/index.theme
+	cp --no-preserve=ownership $< $@
+
 $(PREFIX)/$(THEME)/index.theme: $(TARGET_FILES) $(TARGET_LINKS)
 
 $(TARGET_FILES): $(PREFIX)/%: %
