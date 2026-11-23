@@ -1,14 +1,19 @@
 # Use it
 
 ```
-printf 'Xcursor.theme: xcore-large\nXcursor.size: 64\n' | xrdb -merge
-XCURSOR_THEME=xcore-large XCURSOR_SIZE=64 xsetroot -cursor_name left_ptr
-XCURSOR_THEME=xcore-large XCURSOR_SIZE=64 icewm --restart
+echo 'Xcursor.theme: xcore-large' | xrdb -merge
+echo 'Xcursor.size: 64' | xrdb -merge
+export XCURSOR_THEME=xcore-large XCURSOR_SIZE=64
+xsetroot -cursor_name left_ptr
+icewm --restart
 ```
 
-For GTK apps also set gtk-cursor-theme-name="xcore-large" and
-gtk-cursor-theme-size=64. You can verify the sizes with the Perl lister
-from earlier, run on ~/.icons/xcore-large/cursors/left_ptr.
+For GTK2 apps edit `~/.gtkrc-2.0`,
+for GTK3 apps edit `[Settings]` section in `~/.config/gtk-3.0/settings.ini`:
+
+- `gtk-cursor-theme-name="xcore-large"`
+- `gtk-cursor-theme-size=64`
+
 
 # Notes
 
