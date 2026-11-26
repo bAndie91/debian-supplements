@@ -9,16 +9,17 @@ default:
 install: $(PREFIX)/$(THEME)/index.theme
 
 ICONNAMES = $(shell cat $(THEME)/.iconnames)
-TARGET_FILES = $(foreach name,$(ICONNAMES),$(PREFIX)/$(THEME)/cursors/$(name))
+CURSORS_PREFIX = $(PREFIX)/$(THEME)/cursors
+CURSOR_FILES = $(foreach name,$(ICONNAMES),$(CURSORS_PREFIX)/$(name))
 
 
-$(PREFIX)/$(THEME)/index.theme: $(THEME)/index.theme | $(PREFIX)/$(THEME)/
+$(PREFIX)/$(THEME)/index.theme: $(THEME)/index.theme
 	$(INSTALL_WRAPPER) install -m 0644 $< $@
 
-$(PREFIX)/$(THEME)/:
+$(CURSORS_PREFIX)/:
 	$(INSTALL_WRAPPER) mkdir -p $@
 
-$(PREFIX)/$(THEME)/index.theme: $(TARGET_FILES)
+$(PREFIX)/$(THEME)/index.theme: $(CURSOR_FILES)
 
-$(TARGET_FILES): $(PREFIX)/%: %
+$(CURSOR_FILES): $(PREFIX)/%: % | $(CURSORS_PREFIX)/
 	if [ -L $< ]; then $(INSTALL_WRAPPER) ln -snf $$(readlink $<) $@ ; else $(INSTALL_WRAPPER) install -m 0644 $< $@ ; fi
