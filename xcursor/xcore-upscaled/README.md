@@ -1,18 +1,54 @@
 # Use it
 
+## Gtk2
+
+For Gtk2 apps edit `~/.gtkrc-2.0`:
+
 ```
-echo 'Xcursor.theme: xcore-large' | xrdb -merge
-echo 'Xcursor.size: 64' | xrdb -merge
+gtk-cursor-theme-name="xcore-large"
+gtk-cursor-theme-size=64
+```
+
+## Gtk3
+
+For Gtk3 apps edit `~/.config/gtk-3.0/settings.ini`:
+
+```
+[Settings]
+gtk-cursor-theme-name=xcore-large
+gtk-cursor-theme-size=64
+```
+
+(no quotes around `xcode-large`)
+
+## GSettings
+
+- for Gtk3 apps with Wayland backend
+- Gtk4
+- SDL3
+
+```
+gsettings set org.gnome.desktop.interface cursor-theme xcore-large
+gsettings set org.gnome.desktop.interface cursor-size 64
+```
+
+## Xlib
+
+For bare Xlib apps (via libXcursor, libxcb-cursor), FLTK and Qt6 (in same cases),
+set Xresources and apply by `xrdb -merge`:
+
+```
+Xcursor.theme: xcore-large
+Xcursor.size: 64
+```
+
+override by env vars:
+
+```
 export XCURSOR_THEME=xcore-large XCURSOR_SIZE=64
 xsetroot -cursor_name left_ptr
 icewm --restart
 ```
-
-For GTK2 apps edit `~/.gtkrc-2.0`,
-for GTK3 apps edit `[Settings]` section in `~/.config/gtk-3.0/settings.ini`:
-
-- `gtk-cursor-theme-name="xcore-large"`
-- `gtk-cursor-theme-size=64`
 
 
 # Notes
